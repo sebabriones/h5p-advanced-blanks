@@ -8,7 +8,7 @@ module.exports = (env, argv) => {
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'h5p-advanced-blanks.js'
+      filename: 'h5p-advanced-blanks-cfrd.js'
     },
     module: {
       rules: [

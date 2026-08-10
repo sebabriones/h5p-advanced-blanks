@@ -25,18 +25,35 @@
       <button class="h5p-notification" on-click="@this.fire('displayFeedback', {}, blank)">
         &#xf05a;
       </button>
-      <span class="h5p-input-wrapper">      
-      <select id="{{blank.id}}" type="text" value="{{blank.enteredText}}"
-              on-enter="@this.fire('checkBlank', {}, blank, 'enter')" 
-              on-change="@this.fire('checkBlank', {}, blank, 'change')"
+      <span class="h5p-input-wrapper h5p-ab-custom-select{{#blank.selectOpen}} is-open{{/if}}{{#blank.selectOpenUp}} open-up{{/if}}">
+      <button type="button"
+              id="{{blank.id}}"
+              class="h5p-text-input h5p-ab-select-trigger"
+              aria-haspopup="listbox"
+              aria-expanded="{{#blank.selectOpen}}true{{else}}false{{/if}}"
+              aria-controls="listbox-{{blank.id}}"
+              on-click="@this.fire('toggleSelect', event, blank)"
+              on-keydown="@this.fire('selectKeydown', event, blank)"
               on-focus="@this.fire('focus', {}, blank)"
-              {{#(blank.isCorrect || blank.isShowingSolution)}}disabled="disabled"{{/if}} 
-              size="1"
-              class="h5p-text-input">
-        {{#each blank.choices}}
-          <option>{{this}}</option>
+              {{#(blank.selectInteractionLocked || blank.isCorrect || blank.isError || blank.isRetry || blank.isShowingSolution)}}disabled="disabled"{{/if}}
+              style="min-width: {{blank.minTextLength}}ch;">
+        <span class="h5p-ab-select-label">{{blank.enteredText}}</span>
+        <span class="h5p-ab-select-arrow" aria-hidden="true"></span>
+      </button>
+      {{#if blank.selectOpen}}
+      <ul id="listbox-{{blank.id}}"
+          class="h5p-ab-select-list"
+          role="listbox"
+          style="{{blank.selectListStyle}}"
+          on-mousedown="@this.fire('selectListPointer', event, blank)">
+        {{#each blank.choices:i}}
+          <li role="option"
+              class="h5p-ab-select-option{{#if this === blank.enteredText}} is-selected{{/if}}{{#if i === blank.selectHighlightIndex}} is-highlighted{{/if}}"
+              aria-selected="{{#if this === blank.enteredText}}true{{else}}false{{/if}}"
+              on-click="@this.fire('selectChoice', event, blank, this)">{{this}}</li>
         {{/each}}
-      </select>
+      </ul>
+      {{/if}}
       {{#blank.hasHint}}
         <span class="h5p-tip-container">
           <button on-click="@this.fire('showHint', {}, blank)" {{#(blank.isCorrect || blank.isShowingSolution)}}disabled="disabled"{{/if}}>

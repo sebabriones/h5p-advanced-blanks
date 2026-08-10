@@ -1,16 +1,17 @@
 {
-  "title": "Complex fill the blanks",
+  "title": "Complex fill the blanks (CFRD)",
   "description": "Fill the blanks exercise with individual feedback",
+  "contentType": "Question",
   "majorVersion": 1,
-  "minorVersion": 2,
-  "patchVersion": 7,
+  "minorVersion": 0,
+  "patchVersion": 15,
   "runnable": 1,
-  "author": "S. Rettig",
+  "author": "CFRD-UDEC",
   "license": "MIT",
-  "machineName": "H5P.AdvancedBlanks",
+  "machineName": "H5P.AdvancedBlanksCFRD",
   "coreApi": {
     "majorVersion": 1,
-    "minorVersion": 6
+    "minorVersion": 23
   },
   "embedTypes": [
     "iframe"
@@ -20,7 +21,10 @@
       "path": "dist/ractive.min.js"
     },
     {
-      "path": "dist/h5p-advanced-blanks.js"
+      "path": "scripts/play-area-scale.js"
+    },
+    {
+      "path": "dist/h5p-advanced-blanks-cfrd.js"
     }
   ],
   "preloadedDependencies": [
@@ -30,14 +34,24 @@
       "minorVersion": 5
     },
     {
-      "machineName": "H5P.Question",
+      "machineName": "H5P.QuestionCFRD",
       "majorVersion": 1,
-      "minorVersion": 4
+      "minorVersion": 0
     },
     {
-      "machineName": "H5P.JoubelUI",
+      "machineName": "H5P.JoubelUICFRD",
       "majorVersion": 1,
-      "minorVersion": 3
+      "minorVersion": 0
+    },
+    {
+      "machineName": "H5P.Instructions",
+      "majorVersion": 1,
+      "minorVersion": 0
+    },
+    {
+      "machineName": "H5P.Image",
+      "majorVersion": 1,
+      "minorVersion": 1
     }
   ],
   "editorDependencies": [
@@ -53,6 +67,11 @@
     },
     {
       "machineName": "H5PEditor.RangeList",
+      "majorVersion": 1,
+      "minorVersion": 0
+    },
+    {
+      "machineName": "H5PEditor.ColorSelectorCFRD",
       "majorVersion": 1,
       "minorVersion": 0
     }

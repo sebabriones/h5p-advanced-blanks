@@ -1,25 +1,306 @@
 {
   "semantics": [
     {
-      "label": "Media",
+      "label": "Instructions",
       "fields": [
         {
-          "label": "Tyyppi",
-          "description": "Vapaaehtoinen kuva tai video joka esitetään kysymyksen yläpuolella."
+          "label": "Show instructions"
         },
         {
-          "label": "Estä kuvien kysymyskuvien zoomaaminen"
+          "label": "Instructions text"
+        },
+        {
+          "label": "Display mode",
+          "options": [
+            {
+              "label": "Intro only"
+            },
+            {
+              "label": "Tab only"
+            },
+            {
+              "label": "Intro and tab"
+            }
+          ]
+        },
+        {
+          "label": "Intro button label",
+          "default": "Start"
+        },
+        {
+          "label": "Tab button label",
+          "default": "Instructions"
+        },
+        {
+          "label": "Collapse tab on load"
+        },
+        {
+          "label": "Animation",
+          "fields": [
+            {
+              "label": "Intro curtain duration",
+              "description": "Opening/closing speed for the intro curtain in milliseconds."
+            },
+            {
+              "label": "Tab open/close duration",
+              "description": "Opening/closing speed for the instructions tab in milliseconds."
+            },
+            {
+              "label": "Tab closed extra offset",
+              "description": "Extra offset (in px) applied when the tab is closed. 0 keeps it flush; higher values hide it more."
+            }
+          ]
+        },
+        {
+          "label": "Instructions appearance",
+          "fields": [
+            {
+              "label": "Intro window",
+              "fields": [
+                {
+                  "label": "Use gradient background",
+                  "default": false
+                },
+                {
+                  "label": "Intro background color",
+                  "default": "#f5f5f5"
+                },
+                {
+                  "label": "Gradient background",
+                  "fields": [
+                    {
+                      "label": "Gradient angle",
+                      "description": "Direction in degrees (0 = upward, 180 = downward).",
+                      "default": 180
+                    },
+                    {
+                      "label": "Gradient start color",
+                      "default": "#f5f5f5"
+                    },
+                    {
+                      "label": "Gradient end color",
+                      "default": "#f5f5f5"
+                    }
+                  ]
+                },
+                {
+                  "label": "Intro text color",
+                  "default": "#333333"
+                },
+                {
+                  "label": "Start button",
+                  "fields": [
+                    {
+                      "label": "Use gradient background",
+                      "default": false
+                    },
+                    {
+                      "label": "Button background color",
+                      "default": "#1a73d9"
+                    },
+                    {
+                      "label": "Gradient background",
+                      "fields": [
+                        {
+                          "label": "Gradient angle",
+                          "description": "Direction in degrees (0 = upward, 180 = downward).",
+                          "default": 180
+                        },
+                        {
+                          "label": "Gradient start color",
+                          "default": "#1a73d9"
+                        },
+                        {
+                          "label": "Gradient end color",
+                          "default": "#1a73d9"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Button text color",
+                      "default": "#ffffff"
+                    },
+                    {
+                      "label": "Button hover background color",
+                      "default": "#1356a3"
+                    },
+                    {
+                      "label": "Button hover text color",
+                      "default": "#ffffff"
+                    },
+                    {
+                      "label": "Use button border",
+                      "default": false
+                    },
+                    {
+                      "label": "Border settings",
+                      "fields": [
+                        {
+                          "label": "Button border color",
+                          "default": "#1a73d9"
+                        },
+                        {
+                          "label": "Button hover border color",
+                          "default": "#1356a3"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Button border radius",
+                      "description": "Corner roundness in rem units.",
+                      "default": 0
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Instructions tab",
+              "fields": [
+                {
+                  "label": "Use gradient background",
+                  "default": false
+                },
+                {
+                  "label": "Tab background color",
+                  "default": "#f5f5f5"
+                },
+                {
+                  "label": "Gradient background",
+                  "fields": [
+                    {
+                      "label": "Gradient angle",
+                      "description": "Direction in degrees (0 = upward, 180 = downward).",
+                      "default": 180
+                    },
+                    {
+                      "label": "Gradient start color",
+                      "default": "#f5f5f5"
+                    },
+                    {
+                      "label": "Gradient end color",
+                      "default": "#f5f5f5"
+                    }
+                  ]
+                },
+                {
+                  "label": "Tab text color",
+                  "default": "#333333"
+                },
+                {
+                  "label": "Tab content border color",
+                  "default": "#dbe2e8"
+                },
+                {
+                  "label": "Tab button position",
+                  "default": "left",
+                  "options": [
+                    {
+                      "label": "Left"
+                    },
+                    {
+                      "label": "Center"
+                    },
+                    {
+                      "label": "Right"
+                    }
+                  ]
+                },
+                {
+                  "label": "Tab button",
+                  "fields": [
+                    {
+                      "label": "Use gradient background",
+                      "default": false
+                    },
+                    {
+                      "label": "Button background color",
+                      "default": "#1a73d9"
+                    },
+                    {
+                      "label": "Gradient background",
+                      "fields": [
+                        {
+                          "label": "Gradient angle",
+                          "description": "Direction in degrees (0 = upward, 180 = downward).",
+                          "default": 180
+                        },
+                        {
+                          "label": "Gradient start color",
+                          "default": "#1a73d9"
+                        },
+                        {
+                          "label": "Gradient end color",
+                          "default": "#1a73d9"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Button text color",
+                      "default": "#ffffff"
+                    },
+                    {
+                      "label": "Button hover background color",
+                      "default": "#1356a3"
+                    },
+                    {
+                      "label": "Button hover text color",
+                      "default": "#ffffff"
+                    },
+                    {
+                      "label": "Use button border",
+                      "default": false
+                    },
+                    {
+                      "label": "Border settings",
+                      "fields": [
+                        {
+                          "label": "Button border color",
+                          "default": "#1a73d9"
+                        },
+                        {
+                          "label": "Button hover border color",
+                          "default": "#1356a3"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Button border radius",
+                      "description": "Corner roundness in rem units.",
+                      "default": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Context (optional)",
+      "fields": [
+        {
+          "label": "Context text",
+          "description": "Optional supporting text shown beside the blanks."
+        },
+        {
+          "label": "Context image",
+          "fields": [
+            {
+              "label": "Image",
+              "description": "Optional image shown beside the blanks."
+            },
+            {
+              "label": "Disable image zooming"
+            }
+          ]
         }
       ]
     },
     {
       "label": "Tyhjä sisältö",
       "fields": [
-        {
-          "label": "Tehtävänkuvaus",
-          "default": "Täytä puuttuvat sanat.",
-          "description": "Lyhyt opastus suorittajille miten tehtävä suoritetaan."
-        },
         {
           "label": "Teksti aukkokohdilla",
           "important": {
@@ -117,29 +398,353 @@
       ]
     },
     {
-      "label": "Yleinen Palaute",
+      "label": "Overall Feedback",
       "fields": [
+        {
+          "label": "Popup background color"
+        },
+        {
+          "label": "Feedback text color"
+        },
         {
           "widgets": [
             {
-              "label": "Oletus"
+              "label": "Default"
             }
           ],
-          "label": "Määritä räätälöity palaute haluamillesi pisterajoille",
-          "description": "Klikkaa  \"Add range\" -painiketta lisätäksesi niin monta pistealuerajoitusta kuin haluat. Esimerkiksi: 0-20% Huono pistemäärä, 21-91% Keskinkertainen pistemäärä, 91-100% Hyvä pistemäärä!",
-          "entity": "arvoväli",
+          "label": "Define custom feedback for any score range",
+          "description": "Click the \"Add range\" button to add as many ranges as you need. Example: 0-20% Bad score, 21-91% Average Score, 91-100% Great Score!",
+          "entity": "range",
           "field": {
             "fields": [
               {
-                "label": "Pistearvoväli"
+                "label": "Score Range"
               },
               {},
               {
-                "label": "Palaute määritellyille pisterajoille",
-                "placeholder": "Täytä haluamasi palaute"
+                "label": "Feedback for defined score range",
+                "placeholder": "Fill in the feedback"
+              },
+              {
+                "label": "Appearance settings",
+                "fields": [
+                  {
+                    "label": "Highlighted lead text",
+                    "placeholder": "e.g. Correct! or Incorrect"
+                  },
+                  {
+                    "label": "Bold lead text"
+                  },
+                  {
+                    "label": "Highlighted lead text color"
+                  },
+                  {
+                    "label": "Text alignment",
+                    "description": "Only used when no feedback image is set. With an image, text alignment follows image position (left/right: left aligned, above: centered).",
+                    "options": [
+                      {
+                        "label": "Left"
+                      },
+                      {
+                        "label": "Center"
+                      },
+                      {
+                        "label": "Right"
+                      }
+                    ]
+                  },
+                  {
+                    "label": "Feedback image"
+                  },
+                  {
+                    "label": "Image position",
+                    "options": [
+                      {
+                        "label": "Above text"
+                      },
+                      {
+                        "label": "Left of text"
+                      },
+                      {
+                        "label": "Right of text"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
+        }
+      ]
+    },
+    {
+      "label": "Appearance",
+      "description": "Colors and sizes for the play area, blanks, feedback states, action buttons and scrollbars.",
+      "fields": [
+        {
+          "label": "Play area background color"
+        },
+        {
+          "label": "Blank fields (normal state)",
+          "description": "Colors for typing inputs and selection dropdowns before checking.",
+          "fields": [
+            {
+              "label": "Use gradient background"
+            },
+            {
+              "label": "Blank background color"
+            },
+            {
+              "label": "Gradient background",
+              "fields": [
+                {
+                  "label": "Gradient angle",
+                  "description": "Direction in degrees (0 = upward, 180 = downward)."
+                },
+                {
+                  "label": "Gradient start color"
+                },
+                {
+                  "label": "Gradient end color"
+                }
+              ]
+            },
+            {
+              "label": "Blank text color"
+            },
+            {
+              "label": "Use border"
+            },
+            {
+              "label": "Border color"
+            },
+            {
+              "label": "Use focus border",
+              "description": "When enabled, blanks show a border color and glow while focused."
+            },
+            {
+              "label": "Focus border color",
+              "description": "Border and glow color when the blank is focused."
+            },
+            {
+              "label": "Blank border radius",
+              "description": "Corner roundness in em units."
+            },
+            {
+              "label": "Select arrow icon",
+              "description": "Icon on selection blanks. Hidden when correct/incorrect feedback icons are shown.",
+              "options": [
+                {
+                  "label": "Caret (triangle)"
+                },
+                {
+                  "label": "Chevron"
+                },
+                {
+                  "label": "Angle"
+                },
+                {
+                  "label": "None"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Text",
+          "description": "Font sizes and colors for the cloze text and the context panel. Sizes are unitless numbers in em (for example 1, not 1em).",
+          "fields": [
+            {
+              "label": "Cloze font size",
+              "description": "Text size relative to the play area (em). Stored as a number (default 1)."
+            },
+            {
+              "label": "Cloze text color"
+            },
+            {
+              "label": "Context text color"
+            },
+            {
+              "label": "Context font size",
+              "description": "Text size relative to the play area (em). Stored as a number (default 1)."
+            }
+          ]
+        },
+        {
+          "label": "Correct answer colors",
+          "fields": [
+            {
+              "label": "Use gradient background"
+            },
+            {
+              "label": "Correct blank background color"
+            },
+            {
+              "label": "Gradient background",
+              "fields": [
+                {
+                  "label": "Gradient angle",
+                  "description": "Direction in degrees (0 = upward, 180 = downward)."
+                },
+                {
+                  "label": "Gradient start color"
+                },
+                {
+                  "label": "Gradient end color"
+                }
+              ]
+            },
+            {
+              "label": "Correct blank text color"
+            },
+            {
+              "label": "Correct blank border color",
+              "description": "Defaults to the solid background or gradient start color when empty."
+            }
+          ]
+        },
+        {
+          "label": "Wrong answer colors",
+          "fields": [
+            {
+              "label": "Use gradient background"
+            },
+            {
+              "label": "Wrong blank background color"
+            },
+            {
+              "label": "Gradient background",
+              "fields": [
+                {
+                  "label": "Gradient angle",
+                  "description": "Direction in degrees (0 = upward, 180 = downward)."
+                },
+                {
+                  "label": "Gradient start color"
+                },
+                {
+                  "label": "Gradient end color"
+                }
+              ]
+            },
+            {
+              "label": "Wrong blank text color"
+            },
+            {
+              "label": "Wrong blank border color",
+              "description": "Defaults to the solid background or gradient start color when empty."
+            }
+          ]
+        },
+        {
+          "label": "Spelling mistake / retry colors",
+          "fields": [
+            {
+              "label": "Use gradient background"
+            },
+            {
+              "label": "Retry blank background color"
+            },
+            {
+              "label": "Gradient background",
+              "fields": [
+                {
+                  "label": "Gradient angle",
+                  "description": "Direction in degrees (0 = upward, 180 = downward)."
+                },
+                {
+                  "label": "Gradient start color"
+                },
+                {
+                  "label": "Gradient end color"
+                }
+              ]
+            },
+            {
+              "label": "Retry blank text color"
+            },
+            {
+              "label": "Retry blank border color",
+              "description": "Defaults to the solid background or gradient start color when empty."
+            }
+          ]
+        },
+        {
+          "label": "Action buttons (Check, Retry and Show solution)",
+          "description": "Shared style for Check, Try again and Show solution buttons. Border colors apply only when border is enabled.",
+          "fields": [
+            {
+              "label": "Use gradient background"
+            },
+            {
+              "label": "Button background color"
+            },
+            {
+              "label": "Gradient background",
+              "fields": [
+                {
+                  "label": "Gradient angle",
+                  "description": "Direction in degrees (0 = upward, 180 = downward)."
+                },
+                {
+                  "label": "Gradient start color"
+                },
+                {
+                  "label": "Gradient end color"
+                }
+              ]
+            },
+            {
+              "label": "Button text color"
+            },
+            {
+              "label": "Button hover background color"
+            },
+            {
+              "label": "Button hover text color"
+            },
+            {
+              "label": "Use button border"
+            },
+            {
+              "label": "Border settings",
+              "fields": [
+                {
+                  "label": "Button border color"
+                },
+                {
+                  "label": "Button hover border color"
+                }
+              ]
+            },
+            {
+              "label": "Button border radius",
+              "description": "Default is 2em (Joubel UI). Lower values are sharper; higher values are more rounded."
+            }
+          ]
+        },
+        {
+          "label": "Scrollbar",
+          "description": "Colors for the scrollbars in the cloze text and context panel.",
+          "fields": [
+            {
+              "label": "Scrollbar width",
+              "description": "Width in pixels."
+            },
+            {
+              "label": "Show scrollbar track",
+              "description": "When enabled, the track behind the scrollbar thumb is visible and its color can be configured."
+            },
+            {
+              "label": "Scrollbar track color"
+            },
+            {
+              "label": "Scrollbar thumb color"
+            },
+            {
+              "label": "Scrollbar thumb hover color"
+            }
+          ]
         }
       ]
     },
@@ -289,6 +894,12 @@
     {
       "label": "Tekstimuotoinen esitys pistepalkista niille jotka käyttävät ruudunlukijasovellusta",
       "default": "Sait :num pistettä :total pisteestä"
+    },
+    {
+      "label": "Feedback popup close button label"
+    },
+    {
+      "label": "Show feedback button label"
     }
   ]
 }

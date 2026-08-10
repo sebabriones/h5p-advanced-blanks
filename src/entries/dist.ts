@@ -1,6 +1,10 @@
 import "../styles/style.css";
 import AdvancedBlanks from '../scripts/app';
 
-// Load library
+// Load library (preserve PlayArea from scripts/play-area-scale.js)
 H5P = H5P || {};
-H5P.AdvancedBlanks = AdvancedBlanks;
+const PlayArea = H5P.AdvancedBlanksCFRD && H5P.AdvancedBlanksCFRD.PlayArea;
+H5P.AdvancedBlanksCFRD = AdvancedBlanks;
+if (PlayArea) {
+  H5P.AdvancedBlanksCFRD.PlayArea = PlayArea;
+}

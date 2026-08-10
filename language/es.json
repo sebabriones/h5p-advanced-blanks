@@ -1,25 +1,353 @@
 {
   "semantics": [
     {
-      "label": "Medio",
+      "label": "Instrucciones",
       "fields": [
         {
-          "label": "Tipo",
-          "description": "Medio opcional para mostrar arriba de la pregunta."
+          "label": "Mostrar instrucciones"
         },
         {
-          "label": "Deshabilitar zoom de imagen para imagen de pregunta"
+          "label": "Texto de las instrucciones"
+        },
+        {
+          "label": "Modo de visualización",
+          "options": [
+            {
+              "label": "Solo introducción"
+            },
+            {
+              "label": "Solo pestaña"
+            },
+            {
+              "label": "Introducción y pestaña"
+            }
+          ]
+        },
+        {
+          "label": "Texto del botón de la introducción",
+          "default": "Comenzar"
+        },
+        {
+          "label": "Texto del botón de la pestaña",
+          "default": "Instrucciones"
+        },
+        {
+          "label": "Mostrar la pestaña contraída al cargar"
+        },
+        {
+          "label": "Animación",
+          "fields": [
+            {
+              "label": "Duración de la cortina de introducción",
+              "description": "Velocidad de apertura/cierre de la cortina de introducción en milisegundos."
+            },
+            {
+              "label": "Duración de apertura/cierre de la pestaña",
+              "description": "Velocidad de apertura/cierre de la pestaña de instrucciones en milisegundos."
+            },
+            {
+              "label": "Desplazamiento extra al cerrar la pestaña",
+              "description": "Margen adicional (en px) cuando la pestaña está cerrada. 0 la deja al ras; valores más altos la ocultan más."
+            }
+          ]
+        },
+        {
+          "label": "Apariencia de las instrucciones",
+          "fields": [
+            {
+              "label": "Ventana de introducción",
+              "fields": [
+                {
+                  "label": "Usar fondo en degradado"
+                },
+                {
+                  "label": "Color de fondo de la introducción"
+                },
+                {
+                  "label": "Fondo en degradado",
+                  "fields": [
+                    {
+                      "label": "Ángulo del degradado",
+                      "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                    },
+                    {
+                      "label": "Color inicial del degradado"
+                    },
+                    {
+                      "label": "Color final del degradado"
+                    }
+                  ]
+                },
+                {
+                  "label": "Color del texto de la introducción"
+                },
+                {
+                  "label": "Relleno del texto",
+                  "description": "Espaciado interior alrededor del texto de introducción y del botón comenzar, en unidades rem.",
+                  "fields": [
+                    {
+                      "label": "Superior",
+                      "default": 2
+                    },
+                    {
+                      "label": "Derecho",
+                      "default": 2
+                    },
+                    {
+                      "label": "Inferior",
+                      "default": 2
+                    },
+                    {
+                      "label": "Izquierdo",
+                      "default": 2
+                    }
+                  ]
+                },
+                {
+                  "label": "Botón comenzar",
+                  "fields": [
+                    {
+                      "label": "Usar fondo en degradado"
+                    },
+                    {
+                      "label": "Color de fondo del botón"
+                    },
+                    {
+                      "label": "Fondo en degradado",
+                      "fields": [
+                        {
+                          "label": "Ángulo del degradado",
+                          "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                        },
+                        {
+                          "label": "Color inicial del degradado"
+                        },
+                        {
+                          "label": "Color final del degradado"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Color del texto del botón"
+                    },
+                    {
+                      "label": "Usar fondo en degradado al pasar el cursor"
+                    },
+                    {
+                      "label": "Color de fondo del botón al pasar el cursor"
+                    },
+                    {
+                      "label": "Fondo en degradado al pasar el cursor",
+                      "fields": [
+                        {
+                          "label": "Ángulo del degradado",
+                          "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                        },
+                        {
+                          "label": "Color inicial del degradado"
+                        },
+                        {
+                          "label": "Color final del degradado"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Color del texto del botón al pasar el cursor"
+                    },
+                    {
+                      "label": "Usar borde en el botón"
+                    },
+                    {
+                      "label": "Ajustes del borde",
+                      "fields": [
+                        {
+                          "label": "Color del borde del botón"
+                        },
+                        {
+                          "label": "Color del borde del botón al pasar el cursor"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Radio del borde del botón",
+                      "description": "Redondeo de las esquinas en unidades rem."
+                    },
+                    {
+                      "label": "Ancho del botón",
+                      "description": "Ancho máximo del botón Comenzar en unidades rem. Nunca supera el 100 % del espacio disponible.",
+                      "default": 18
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Pestaña de instrucciones",
+              "fields": [
+                {
+                  "label": "Usar fondo en degradado"
+                },
+                {
+                  "label": "Color de fondo de la pestaña"
+                },
+                {
+                  "label": "Fondo en degradado",
+                  "fields": [
+                    {
+                      "label": "Ángulo del degradado",
+                      "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                    },
+                    {
+                      "label": "Color inicial del degradado"
+                    },
+                    {
+                      "label": "Color final del degradado"
+                    }
+                  ]
+                },
+                {
+                  "label": "Color del texto de la pestaña"
+                },
+                {
+                  "label": "Relleno del texto",
+                  "description": "Espaciado interior del panel de contenido de la pestaña, en unidades rem.",
+                  "fields": [
+                    {
+                      "label": "Superior",
+                      "default": 1
+                    },
+                    {
+                      "label": "Derecho",
+                      "default": 1.5
+                    },
+                    {
+                      "label": "Inferior",
+                      "default": 1
+                    },
+                    {
+                      "label": "Izquierdo",
+                      "default": 1.5
+                    }
+                  ]
+                },
+                {
+                  "label": "Color del borde del contenido de la pestaña"
+                },
+                {
+                  "label": "Posición del botón de la pestaña",
+                  "options": [
+                    {
+                      "label": "Izquierda"
+                    },
+                    {
+                      "label": "Centro"
+                    },
+                    {
+                      "label": "Derecha"
+                    }
+                  ]
+                },
+                {
+                  "label": "Botón de la pestaña",
+                  "fields": [
+                    {
+                      "label": "Usar fondo en degradado"
+                    },
+                    {
+                      "label": "Color de fondo del botón"
+                    },
+                    {
+                      "label": "Fondo en degradado",
+                      "fields": [
+                        {
+                          "label": "Ángulo del degradado",
+                          "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                        },
+                        {
+                          "label": "Color inicial del degradado"
+                        },
+                        {
+                          "label": "Color final del degradado"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Color del texto del botón"
+                    },
+                    {
+                      "label": "Usar fondo en degradado al pasar el cursor"
+                    },
+                    {
+                      "label": "Color de fondo del botón al pasar el cursor"
+                    },
+                    {
+                      "label": "Fondo en degradado al pasar el cursor",
+                      "fields": [
+                        {
+                          "label": "Ángulo del degradado",
+                          "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                        },
+                        {
+                          "label": "Color inicial del degradado"
+                        },
+                        {
+                          "label": "Color final del degradado"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Color del texto del botón al pasar el cursor"
+                    },
+                    {
+                      "label": "Usar borde en el botón"
+                    },
+                    {
+                      "label": "Ajustes del borde",
+                      "fields": [
+                        {
+                          "label": "Color del borde del botón"
+                        },
+                        {
+                          "label": "Color del borde del botón al pasar el cursor"
+                        }
+                      ]
+                    },
+                    {
+                      "label": "Radio del borde del botón",
+                      "description": "Redondeo de las esquinas en unidades rem."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Contexto (opcional)",
+      "fields": [
+        {
+          "label": "Texto de contexto",
+          "description": "Texto de apoyo opcional que se muestra junto a la pregunta."
+        },
+        {
+          "label": "Imagen de contexto",
+          "fields": [
+            {
+              "label": "Imagen",
+              "description": "Imagen de apoyo opcional que se muestra junto a la pregunta."
+            },
+            {
+              "label": "Deshabilitar acercamiento de imagen"
+            }
+          ]
         }
       ]
     },
     {
       "label": "Hueco en Contenido",
       "fields": [
-        {
-          "label": "Descripción del trabajo",
-          "default": "Escriba las palabras faltantes.",
-          "description": "Una guía que le dice al usuario como contestar este trabajo."
-        },
         {
           "label": "Texto con huecos",
           "important": {
@@ -120,26 +448,374 @@
       "label": "Retroalimentación Global",
       "fields": [
         {
+          "label": "Color de fondo del popup"
+        },
+        {
+          "label": "Color del texto de la retroalimentación"
+        },
+        {
           "widgets": [
             {
               "label": "Predeterminado"
             }
           ],
           "label": "Definir retroalimentación personalizada para cualquier rango de puntaje",
-          "description": "Hagar clic en el botón \"Añadir rango\" para añadir cuantos rangos necesite. Ejemplo: 0-20% Mal puntaje, 21-91% Puntaje Promedio, 91-100% ¡Magnífico Puntaje!",
+          "description": "Haga clic en el botón \"Añadir rango\" para añadir cuantos rangos necesite. Ejemplo: 0-20% Mal puntaje, 21-91% Puntaje promedio, 91-100% ¡Magnífico puntaje!",
           "entity": "rango",
           "field": {
             "fields": [
               {
-                "label": "Rango de Puntaje"
+                "label": "Rango de puntaje"
               },
               {},
               {
-                "label": "Retroalimentación para rango de puntaje definido",
+                "label": "Retroalimentación para el rango de puntaje definido",
                 "placeholder": "Complete la retroalimentación"
+              },
+              {
+                "label": "Ajustes de apariencia",
+                "fields": [
+                  {
+                    "label": "Texto destacado (lead)",
+                    "placeholder": "p. ej. ¡Correcto! o Incorrecto"
+                  },
+                  {
+                    "label": "Texto destacado en negrita"
+                  },
+                  {
+                    "label": "Color del texto destacado"
+                  },
+                  {
+                    "label": "Alineación del texto",
+                    "description": "Solo se usa cuando no hay imagen de retroalimentación. Con imagen, la alineación sigue la posición de la imagen (izquierda/derecha: alineado a la izquierda; arriba: centrado).",
+                    "options": [
+                      {
+                        "label": "Izquierda"
+                      },
+                      {
+                        "label": "Centro"
+                      },
+                      {
+                        "label": "Derecha"
+                      }
+                    ]
+                  },
+                  {
+                    "label": "Imagen de retroalimentación"
+                  },
+                  {
+                    "label": "Posición de la imagen",
+                    "options": [
+                      {
+                        "label": "Encima del texto"
+                      },
+                      {
+                        "label": "A la izquierda del texto"
+                      },
+                      {
+                        "label": "A la derecha del texto"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
+        }
+      ]
+    },
+    {
+      "label": "Apariencia",
+      "description": "Colores y tamaños del área de juego, espacios en blanco, estados de respuesta, botones de acción y barras de desplazamiento.",
+      "fields": [
+        {
+          "label": "Color de fondo del área de juego"
+        },
+        {
+          "label": "Campos en blanco (estado normal)",
+          "description": "Colores de los campos de escritura y de las listas de selección antes de comprobar.",
+          "fields": [
+            {
+              "label": "Usar fondo en degradado"
+            },
+            {
+              "label": "Color de fondo del espacio en blanco"
+            },
+            {
+              "label": "Fondo en degradado",
+              "fields": [
+                {
+                  "label": "Ángulo del degradado",
+                  "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                },
+                {
+                  "label": "Color inicial del degradado"
+                },
+                {
+                  "label": "Color final del degradado"
+                }
+              ]
+            },
+            {
+              "label": "Color del texto del espacio en blanco"
+            },
+            {
+              "label": "Usar borde"
+            },
+            {
+              "label": "Color del borde"
+            },
+            {
+              "label": "Usar borde al enfocar",
+              "description": "Si está activado, los espacios en blanco muestran color de borde y resplandor al tener el foco."
+            },
+            {
+              "label": "Color del borde al enfocar",
+              "description": "Color del borde y del resplandor cuando el espacio en blanco tiene el foco."
+            },
+            {
+              "label": "Radio del borde del espacio en blanco",
+              "description": "Redondez de las esquinas en unidades em."
+            },
+            {
+              "label": "Icono de flecha del select",
+              "description": "Icono en los espacios de selección. Se oculta cuando aparecen los iconos de respuesta correcta o incorrecta.",
+              "options": [
+                {
+                  "label": "Caret (triángulo)"
+                },
+                {
+                  "label": "Chevron"
+                },
+                {
+                  "label": "Ángulo"
+                },
+                {
+                  "label": "Ninguno"
+                }
+              ]
+            },
+            {
+              "label": "Lista de selección",
+              "description": "Colores de la lista de opciones en el modo de selección.",
+              "fields": [
+                {
+                  "label": "Color de fondo de la lista"
+                },
+                {
+                  "label": "Color del texto de la lista"
+                },
+                {
+                  "label": "Fondo al pasar el cursor"
+                },
+                {
+                  "label": "Texto al pasar el cursor"
+                },
+                {
+                  "label": "Fondo de la opción seleccionada"
+                },
+                {
+                  "label": "Texto de la opción seleccionada"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Texto",
+          "description": "Tamaños y colores del texto del ejercicio y del panel de contexto. Los tamaños son números sin unidad en em (por ejemplo 1, no 1em).",
+          "fields": [
+            {
+              "label": "Tamaño de fuente del ejercicio",
+              "description": "Tamaño relativo al área de juego (em). Se guarda como número (valor predeterminado 1)."
+            },
+            {
+              "label": "Color del texto del ejercicio"
+            },
+            {
+              "label": "Color del texto de contexto"
+            },
+            {
+              "label": "Tamaño de fuente del contexto",
+              "description": "Tamaño relativo al área de juego (em). Se guarda como número (valor predeterminado 1)."
+            }
+          ]
+        },
+        {
+          "label": "Colores de respuesta correcta",
+          "fields": [
+            {
+              "label": "Usar fondo en degradado"
+            },
+            {
+              "label": "Color de fondo del espacio correcto"
+            },
+            {
+              "label": "Fondo en degradado",
+              "fields": [
+                {
+                  "label": "Ángulo del degradado",
+                  "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                },
+                {
+                  "label": "Color inicial del degradado"
+                },
+                {
+                  "label": "Color final del degradado"
+                }
+              ]
+            },
+            {
+              "label": "Color del texto del espacio correcto"
+            },
+            {
+              "label": "Color del borde del espacio correcto",
+              "description": "Si está vacío, se usa el color de fondo sólido o el color inicial del degradado."
+            }
+          ]
+        },
+        {
+          "label": "Colores de respuesta incorrecta",
+          "fields": [
+            {
+              "label": "Usar fondo en degradado"
+            },
+            {
+              "label": "Color de fondo del espacio incorrecto"
+            },
+            {
+              "label": "Fondo en degradado",
+              "fields": [
+                {
+                  "label": "Ángulo del degradado",
+                  "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                },
+                {
+                  "label": "Color inicial del degradado"
+                },
+                {
+                  "label": "Color final del degradado"
+                }
+              ]
+            },
+            {
+              "label": "Color del texto del espacio incorrecto"
+            },
+            {
+              "label": "Color del borde del espacio incorrecto",
+              "description": "Si está vacío, se usa el color de fondo sólido o el color inicial del degradado."
+            }
+          ]
+        },
+        {
+          "label": "Colores de error ortográfico / reintento",
+          "fields": [
+            {
+              "label": "Usar fondo en degradado"
+            },
+            {
+              "label": "Color de fondo del espacio en reintento"
+            },
+            {
+              "label": "Fondo en degradado",
+              "fields": [
+                {
+                  "label": "Ángulo del degradado",
+                  "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                },
+                {
+                  "label": "Color inicial del degradado"
+                },
+                {
+                  "label": "Color final del degradado"
+                }
+              ]
+            },
+            {
+              "label": "Color del texto del espacio en reintento"
+            },
+            {
+              "label": "Color del borde del espacio en reintento",
+              "description": "Si está vacío, se usa el color de fondo sólido o el color inicial del degradado."
+            }
+          ]
+        },
+        {
+          "label": "Botones de acción (Comprobar, Reintentar y Mostrar solución)",
+          "description": "Estilo compartido para los botones Comprobar, Intentar de nuevo y Mostrar solución. Los colores de borde solo se aplican cuando el borde está activado.",
+          "fields": [
+            {
+              "label": "Usar fondo en degradado"
+            },
+            {
+              "label": "Color de fondo del botón"
+            },
+            {
+              "label": "Fondo en degradado",
+              "fields": [
+                {
+                  "label": "Ángulo del degradado",
+                  "description": "Dirección en grados (0 = hacia arriba, 180 = hacia abajo)."
+                },
+                {
+                  "label": "Color inicial del degradado"
+                },
+                {
+                  "label": "Color final del degradado"
+                }
+              ]
+            },
+            {
+              "label": "Color del texto del botón"
+            },
+            {
+              "label": "Color de fondo del botón al pasar el cursor"
+            },
+            {
+              "label": "Color del texto del botón al pasar el cursor"
+            },
+            {
+              "label": "Usar borde del botón"
+            },
+            {
+              "label": "Ajustes del borde",
+              "fields": [
+                {
+                  "label": "Color del borde del botón"
+                },
+                {
+                  "label": "Color del borde del botón al pasar el cursor"
+                }
+              ]
+            },
+            {
+              "label": "Radio del borde del botón",
+              "description": "El valor predeterminado es 2em (interfaz Joubel). Valores más bajos son más angulosos; valores más altos son más redondeados."
+            }
+          ]
+        },
+        {
+          "label": "Barra de desplazamiento",
+          "description": "Colores de las barras de desplazamiento del texto del ejercicio y del panel de contexto.",
+          "fields": [
+            {
+              "label": "Ancho de la barra de desplazamiento",
+              "description": "Ancho en píxeles."
+            },
+            {
+              "label": "Mostrar la pista de la barra de desplazamiento",
+              "description": "Si está activado, la pista detrás del control es visible y se puede configurar su color."
+            },
+            {
+              "label": "Color de la pista de la barra de desplazamiento"
+            },
+            {
+              "label": "Color del control de la barra de desplazamiento"
+            },
+            {
+              "label": "Color del control al pasar el cursor"
+            }
+          ]
         }
       ]
     },
@@ -289,6 +965,12 @@
     {
       "label": "Representación textual de la barra de puntaje para aquellos que usan un lector de texto en voz alta",
       "default": "Obtuvo :num de un total de :total puntos"
+    },
+    {
+      "label": "Etiqueta del botón cerrar del popup de retroalimentación"
+    },
+    {
+      "label": "Etiqueta del botón mostrar retroalimentación"
     }
   ]
 }

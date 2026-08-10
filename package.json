@@ -1,12 +1,13 @@
 {
-  "name": "h5p-advanced-blanks",
-  "version": "1.1.0",
-  "description": "Fill the blanks exercise with individual feedback",
+  "name": "h5p-advanced-blanks-cfrd",
+  "version": "1.0.15",
+  "description": "Complex fill the blanks (CFRD) — fork of H5P Advanced Blanks for CFRD-UDEC.",
   "private": true,
   "scripts": {
     "test": "npx ava",
-    "build": "webpack --mode=development && cp node_modules/ractive/ractive.min.js ./dist",
-    "watch": "webpack --watch --mode=development"
+    "build": "webpack --mode=development && node -e \"require('fs').copyFileSync('node_modules/ractive/ractive.min.js','dist/ractive.min.js')\"",
+    "watch": "webpack --watch --mode=development",
+    "sync:lumi": "powershell -ExecutionPolicy Bypass -File ..\\scripts\\sync-lumi.ps1"
   },
   "repository": {
     "type": "git",
@@ -14,9 +15,10 @@
   },
   "keywords": [
     "h5p",
-    "library"
+    "library",
+    "cfrd"
   ],
-  "author": "Joubel",
+  "author": "CFRD-UDEC",
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.18.10",

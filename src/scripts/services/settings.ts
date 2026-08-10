@@ -18,11 +18,11 @@ export interface ISettings {
 }
 
 export class H5PSettings implements ISettings {
-  public clozeType: ClozeType = ClozeType.Type;
-  public selectAlternatives: SelectAlternatives = SelectAlternatives.Alternatives;
+  public clozeType: ClozeType = ClozeType.Select;
+  public selectAlternatives: SelectAlternatives = SelectAlternatives.All;
   public selectAlternativeRestriction: number = 5;
   public enableRetry: boolean = true;
-  public enableSolutionsButton: boolean = true;
+  public enableSolutionsButton: boolean = false;
   public enableCheckButton: boolean = true;
   public autoCheck: boolean = false;
   public caseSensitive: boolean = false;
@@ -61,7 +61,13 @@ export class H5PSettings implements ISettings {
     this.showSolutionsRequiresInput = h5pConfigData.behaviour.showSolutionsRequiresInput;
     this.confirmCheckDialog = h5pConfigData.behaviour.confirmCheckDialog;
     this.confirmRetryDialog = h5pConfigData.behaviour.confirmRetryDialog;
-    this.disableImageZooming = h5pConfigData.media.disableImageZooming;
+
+    const contextMedia = h5pConfigData.context && h5pConfigData.context.media;
+    const legacyMedia = h5pConfigData.media;
+    this.disableImageZooming = !!(
+      (contextMedia && contextMedia.disableImageZooming) ||
+      (legacyMedia && legacyMedia.disableImageZooming)
+    );
 
     this.enforceLogic();
   }

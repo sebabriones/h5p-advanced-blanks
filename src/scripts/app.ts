@@ -5,6 +5,23 @@ import { H5PLocalization, LocalizationLabels, LocalizationStructures } from "./s
 import { ISettings, H5PSettings } from "./services/settings";
 import { MessageService } from './services/message-service';
 import { Unrwapper } from './helpers/unwrapper';
+import { scheduleInstructionsAttach } from './helpers/instructions';
+import {
+  setupPlayAreaLayout,
+  scheduleInlineEvaluationLayout,
+  applyPlayAreaScale,
+  observePlayArea,
+  scheduleDeferredResize,
+  usesFeedbackPopup
+} from './helpers/play-area';
+import {
+  getContextLayoutClass,
+  hasContextText,
+  hasContextImage,
+  scheduleContextImageAttach,
+  migrateMediaToContext
+} from './helpers/context';
+import { applyActivityAppearance } from './helpers/appearance';
 import { XAPIActivityDefinition } from './models/xapi';
 import { extend } from './helpers/extend';
 
@@ -20,7 +37,7 @@ const XAPI_ALTERNATIVE_EXTENSION = 'https://h5p.org/x-api/alternatives';
 const XAPI_CASE_SENSITIVITY = 'https://h5p.org/x-api/case-sensitivity';
 const XAPI_REPORTING_VERSION_EXTENSION = 'https://h5p.org/x-api/h5p-reporting-version';
 
-export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
+export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: string): any; }) {
 
   private clozeController: ClozeController;
   private repository: IDataRepository;
@@ -33,6 +50,16 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
   private contentId: string;
   private previousState: any;
   private state: States;
+  private options: any;
+  private $container: any;
+  private $instructionsTarget: any;
+  private $playArea: any;
+  private playAreaSize: any;
+  private playAreaResizeObserver: any;
+  private pendingContextImage: any;
+  private _abLastScaleKey: string;
+  private _abLastWidth: number;
+  private _abDeferredResizeTimer: any;
 
   /**
    * Indicates if user has entered any answer so far.
@@ -47,7 +74,7 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
    * @param {object} contentData
    */
   constructor(config: any, contentId: string, contentData: any = {}) {
-    super();
+    super('advanced-blanks-cfrd');
 
     // Set mandatory default values for editor widgets that create content type instances
     config = extend({
@@ -55,15 +82,60 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
         blanksText: ''
       },
       behaviour: {
-        mode: 'typing',
-        selectAlternatives: 'alternatives'
+        mode: 'selection',
+        selectAlternatives: 'all',
+        enableSolutionsButton: false
       },
       submitAnswer: 'Submit',
+      feedbackPopupCloseLabel: 'Close',
+      showFeedbackButtonLabel: 'Show feedback',
+      overallFeedback: {
+        popupBackgroundColor: '#ffffff',
+        feedbackTextColor: '#333333',
+        overallFeedback: []
+      }
     }, config);
+
+    // Legacy: overallFeedback saved as a bare range list
+    if (Array.isArray(config.overallFeedback)) {
+      config.overallFeedback = {
+        popupBackgroundColor: '#ffffff',
+        feedbackTextColor: '#333333',
+        overallFeedback: config.overallFeedback
+      };
+    }
+    else if (
+      config.overallFeedback &&
+      typeof config.overallFeedback === 'object' &&
+      !config.overallFeedback.popupBackgroundColor
+    ) {
+      config.overallFeedback.popupBackgroundColor = '#ffffff';
+      if (!config.overallFeedback.feedbackTextColor) {
+        config.overallFeedback.feedbackTextColor = '#333333';
+      }
+    }
+
+    // Flatten editor-nested range entries: { overallFeedback: { from, to, feedback, ... } }
+    if (
+      config.overallFeedback &&
+      Array.isArray(config.overallFeedback.overallFeedback)
+    ) {
+      config.overallFeedback.overallFeedback = config.overallFeedback.overallFeedback.map((entry) => {
+        if (entry && entry.overallFeedback && typeof entry.overallFeedback === 'object') {
+          return entry.overallFeedback;
+        }
+        return entry;
+      });
+    }
 
     this.jQuery = H5P.jQuery;
     this.contentId = contentId;
     this.contentData = contentData;
+    this.options = config;
+    migrateMediaToContext(config);
+
+    const PlayArea = H5P.AdvancedBlanksCFRD && H5P.AdvancedBlanksCFRD.PlayArea;
+    this.playAreaSize = PlayArea ? PlayArea.getDesignSize() : null;
 
     let unwrapper = new Unrwapper(this.jQuery);
 
@@ -84,17 +156,50 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
     if (contentData && contentData.previousState)
       this.previousState = contentData.previousState;
 
+    const originalSetFeedback = this.setFeedback;
+    if (typeof originalSetFeedback === 'function') {
+      this.setFeedback = (content, score, maxScore, scoreBarLabel, helpText, popupSettings) => {
+        const result = originalSetFeedback.call(this, content, score, maxScore, scoreBarLabel, helpText, popupSettings);
+        // Multi Choice pattern: do not reflow the evaluation footer when feedback is a popup
+        if (
+          this.$container &&
+          this.$container.length &&
+          !usesFeedbackPopup(content, popupSettings)
+        ) {
+          scheduleInlineEvaluationLayout(this.$container, this);
+        }
+        return result;
+      };
+    }
+
+    this.on('resize', (event) => {
+      if (event && event.data && event.data.repositionOnly) {
+        return;
+      }
+      applyPlayAreaScale(this, event);
+      applyActivityAppearance(this);
+    });
+
     /**
-    * Overrides the attach method of the superclass (H5P.Question) and calls it
+    * Overrides the attach method of the superclass (H5P.QuestionCFRD) and calls it
     * at the same time. (equivalent to super.attach($container)).
     * This is necessary, as Ractive needs to be initialized with an existing DOM
-    * element. DOM elements are created in H5P.Question.attach, so initializing
+    * element. DOM elements are created in H5P.QuestionCFRD.attach, so initializing
     * Ractive in registerDomElements doesn't work.
     */
     this.attach = ((original) => {
       return ($container) => {
         original($container);
+        this.$container = $container;
+        this.$playArea = setupPlayAreaLayout($container);
+        this.$instructionsTarget = this.$playArea;
         this.clozeController.initialize(this.container.get(0), $container);
+        scheduleInstructionsAttach(this, this.$playArea);
+        scheduleContextImageAttach(this);
+        applyActivityAppearance(this);
+        observePlayArea(this);
+        scheduleDeferredResize(this);
+        scheduleInlineEvaluationLayout($container, this);
         if (this.clozeController.deserializeCloze(this.previousState)) {
           this.answered = this.clozeController.isFilledOut;
           if (this.settings.autoCheck)
@@ -142,17 +247,61 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
   }
 
   /**
-   * Called by H5P.Question.attach(). Creates all content elements and registers them
-   * with H5P.Question.
+   * Called by H5P.QuestionCFRD.attach(). Creates all content elements and registers them
+   * with H5P.QuestionCFRD.
    */
   registerDomElements = function () {
-    this.registerMedia();
-    this.setIntroduction(this.repository.getTaskDescription());
+    const $ = this.jQuery;
+    const context = this.options && this.options.context;
+    const contextLayoutClass = getContextLayoutClass(context);
+    const contextTextId = 'advanced-blanks-' + this.contentId + '-context';
 
-    this.container = this.jQuery("<div/>", { "class": "h5p-advanced-blanks" });
-    this.setContent(this.container);
+    this.container = $('<div/>', { 'class': 'h5p-advanced-blanks' });
+
+    if (contextLayoutClass) {
+      const $layout = $('<div>', { 'class': 'h5p-ab-slide-layout' });
+      const $contextAside = $('<aside>', {
+        'class': 'h5p-ab-context',
+        'aria-label': 'Context'
+      });
+      const $taskColumn = $('<div>', { 'class': 'h5p-ab-task-column' });
+      let $contextMedia;
+
+      if (hasContextText(context)) {
+        $contextAside.append($('<div>', {
+          id: contextTextId,
+          'class': 'h5p-ab-context-text',
+          html: context.text
+        }));
+      }
+
+      if (hasContextImage(context)) {
+        $contextMedia = $('<div>', { 'class': 'h5p-ab-context-media' });
+        $contextAside.append($contextMedia);
+      }
+
+      $taskColumn.append(this.container);
+      $layout.append($contextAside);
+      $layout.append($taskColumn);
+
+      this.setContent($('<div>', {
+        'class': 'h5p-ab-has-context ' + contextLayoutClass
+      }).append($layout), {
+        'class': 'h5p-ab-with-context'
+      });
+
+      if ($contextMedia && $contextMedia.length) {
+        this.pendingContextImage = {
+          context: context,
+          $container: $contextMedia
+        };
+      }
+    }
+    else {
+      this.setContent(this.container);
+    }
+
     this.registerButtons();
-
     this.moveToState(States.ongoing);
   }
 
@@ -178,27 +327,6 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
     }
 
     return $container;
-  }
-
-  private registerMedia() {
-    var media = this.repository.getMedia();
-    if (!media || !media.library)
-      return;
-
-    var type = media.library.split(' ')[0];
-    if (type === 'H5P.Image') {
-      if (media.params.file) {
-        this.setImage(media.params.file.path, {
-          disableImageZooming: this.settings.disableImageZooming,
-          alt: media.params.alt
-        });
-      }
-    }
-    else if (type === 'H5P.Video') {
-      if (media.params.sources) {
-        this.setVideo(media);
-      }
-    }
   }
 
   private registerButtons() {
@@ -236,6 +364,20 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
         }
       });
     }
+
+    // Re-open overall feedback popup (QuestionCFRD dismissible pattern)
+    this.addButton(
+      'show-feedback',
+      this.localization.getTextFromLabel(LocalizationLabels.showFeedbackButtonLabel) || 'Show feedback',
+      () => {
+        if (typeof this.showFeedbackPopup === 'function') {
+          this.showFeedbackPopup();
+        }
+        this.hideButton('show-feedback');
+      },
+      false
+    );
+    this.hideButton('show-feedback');
   }
 
   private onCheckAnswer = () => {
@@ -266,6 +408,7 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
   }
 
   private onRetry = () => {
+    this.hideButton('show-feedback');
     this.removeFeedback();
     this.clozeController.reset();
     this.answered = false;
@@ -275,8 +418,46 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
   }
 
   private showFeedback() {
-    var scoreText = H5P.Question.determineOverallFeedback(this.localization.getObjectForStructure(LocalizationStructures.overallFeedback), this.clozeController.currentScore / this.clozeController.maxScore).replace('@score', this.clozeController.currentScore).replace('@total', this.clozeController.maxScore);
-    this.setFeedback(scoreText, this.clozeController.currentScore, this.clozeController.maxScore, this.localization.getTextFromLabel(LocalizationLabels.scoreBarLabel));
+    const score = this.clozeController.currentScore;
+    const maxScore = this.clozeController.maxScore;
+    const ratio = maxScore > 0 ? score / maxScore : 0;
+    const overallFeedback =
+      this.options.overallFeedback ||
+      this.localization.getObjectForStructure(LocalizationStructures.overallFeedback);
+    const resolved = (H5P as any).QuestionCFRD && (H5P as any).QuestionCFRD.resolveOverallFeedback
+      ? (H5P as any).QuestionCFRD.resolveOverallFeedback(
+          overallFeedback,
+          ratio,
+          this.contentId,
+          score,
+          maxScore
+        )
+      : null;
+
+    let popupSettings: any;
+    if (resolved && resolved.html && String(resolved.html).trim().length > 0) {
+      popupSettings = {
+        showAsPopup: true,
+        closeText: this.localization.getTextFromLabel(LocalizationLabels.feedbackPopupCloseLabel) || 'Close',
+        alwaysShowClose: true,
+        dismissible: true,
+        popupBackgroundColor: resolved.popupBackgroundColor,
+        plainText: resolved.plainText,
+        onClose: () => {
+          this.showButton('show-feedback');
+        }
+      };
+      this.hideButton('show-feedback');
+    }
+
+    this.setFeedback(
+      resolved ? resolved.html : '',
+      score,
+      maxScore,
+      this.localization.getTextFromLabel(LocalizationLabels.scoreBarLabel),
+      false,
+      popupSettings
+    );
   }
 
   /**
@@ -320,6 +501,7 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
       this.hideButton('check-answer');
       this.hideButton('try-again');
       this.hideButton('show-solution');
+      this.hideButton('show-feedback');
     }
 
     this.trigger('resize');
@@ -350,6 +532,7 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
   }
 
   public resetTask = () => {
+    this.hideButton('show-feedback');
     this.onRetry();
   }
 
@@ -392,7 +575,7 @@ export default class AdvancedBlanks extends (H5P.Question as { new(): any; }) {
     const definition = new XAPIActivityDefinition();
 
     definition.description = {
-      'en-US': '<p>' + this.repository.getTaskDescription() + '</p>' + this.repository.getClozeText().replace(/__(_)+/g, '__________').replace(/!!/g, '')
+      'en-US': this.repository.getClozeText().replace(/__(_)+/g, '__________').replace(/!!/g, '')
     };
 
     definition.type = 'http://adlnet.gov/expapi/activities/cmi.interaction';

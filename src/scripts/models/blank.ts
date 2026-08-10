@@ -30,6 +30,14 @@ export class Blank extends ClozeElement {
   minTextLength: number;
   speechBubble: any;
 
+  /** Custom select (selection mode) view state */
+  selectOpen: boolean;
+  selectOpenUp: boolean;
+  selectHighlightIndex: number;
+  selectListStyle: string;
+  /** After Check answer: block all selects until Retry */
+  selectInteractionLocked: boolean;
+
   /**
    * Add incorrect answers after initializing the object. Call finishInitialization()
    * when done.
@@ -46,8 +54,33 @@ export class Blank extends ClozeElement {
     this.incorrectAnswers = new Array();
     this.choices = new Array();
     this.type = ClozeElementType.Blank;
+    this.selectOpen = false;
+    this.selectOpenUp = false;
+    this.selectHighlightIndex = 0;
+    this.selectListStyle = "";
+    this.selectInteractionLocked = false;
 
     this.id = id;
+  }
+
+  /**
+   * Closes the custom select list without changing the entered value.
+   */
+  public closeSelect(): void {
+    this.selectOpen = false;
+    this.selectOpenUp = false;
+    this.selectListStyle = "";
+  }
+
+  /**
+   * Whether the custom select must ignore interaction (after check / feedback states).
+   */
+  public isSelectDisabled(): boolean {
+    return this.selectInteractionLocked
+      || this.isCorrect
+      || this.isError
+      || this.isRetry
+      || this.isShowingSolution;
   }
 
   /**
@@ -180,6 +213,8 @@ export class Blank extends ClozeElement {
   public reset() {
     this.enteredText = "";
     this.lastCheckedText = "";
+    this.selectInteractionLocked = false;
+    this.closeSelect();
     this.removeTooltip();
     this.setAnswerState(MessageType.None);
     this.hasPendingFeedback = false;
@@ -192,6 +227,7 @@ export class Blank extends ClozeElement {
   public showSolution() {
     this.evaluateAttempt(true);
     this.removeTooltip();
+    this.closeSelect();
     if (this.isCorrect)
       return;
     this.enteredText = this.correctAnswers[0].alternatives[0];
@@ -202,7 +238,11 @@ export class Blank extends ClozeElement {
     if (this.hasPendingFeedback) {
       this.evaluateAttempt(false);
     }
+    // Do not clear feedback / unlock when the select is already checked or locked.
     if (this.settings.clozeType === ClozeType.Select) {
+      if (this.isSelectDisabled()) {
+        return;
+      }
       this.setAnswerState(MessageType.None);
       this.lastCheckedText = "";
     }

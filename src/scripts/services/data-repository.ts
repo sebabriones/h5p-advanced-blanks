@@ -9,8 +9,7 @@ export interface IDataRepository {
   getBlanks(): Blank[];
   getClozeText(): string;
   getFeedbackText(): string;
-  getMedia(): any;
-  getTaskDescription(): string;
+  getContext(): any;
   getSnippets(): Snippet[];
 }
 
@@ -36,12 +35,8 @@ export class H5PDataRepository implements IDataRepository {
     return "";
   }
 
-  getMedia(): any {
-    return this.h5pConfigData.media.type;
-  }
-
-  getTaskDescription(): string {
-    return this.h5pConfigData.content.task;
+  getContext(): any {
+    return this.h5pConfigData.context || null;
   }
 
   getBlanks(): Blank[] {

@@ -40,6 +40,8 @@ export class ClozeController {
 
   private cloze: Cloze;
   private isSelectCloze: boolean;
+  private selectOutsideBound: boolean = false;
+  private selectRepositionBound: boolean = false;
 
   public onScoreChanged: ScoreChanged;
   public onAutoChecked: AutoChecked;
@@ -137,9 +139,14 @@ export class ClozeController {
 
   checkAll = () => {
     this.cloze.hideAllHighlights();
+    this.closeAllSelects();
     for (var blank of this.cloze.blanks) {
       if ((!blank.isCorrect) && blank.enteredText !== "")
         blank.evaluateAttempt(true, true);
+      if (this.isSelectCloze) {
+        blank.selectInteractionLocked = true;
+        blank.closeSelect();
+      }
     }
     this.refreshCloze();
     this.checkAndNotifyCompleteness();
@@ -172,6 +179,272 @@ export class ClozeController {
     blank.removeTooltip();
     this.refreshCloze();
     this.jquery.find("#" + blank.id).focus();
+  }
+
+  private getNativeEvent(event: any): any {
+    if (!event) {
+      return null;
+    }
+    return event.original || event.event || event;
+  }
+
+  private stopEvent(event: any): void {
+    const native = this.getNativeEvent(event);
+    if (native) {
+      if (typeof native.preventDefault === 'function') {
+        native.preventDefault();
+      }
+      if (typeof native.stopPropagation === 'function') {
+        native.stopPropagation();
+      }
+    }
+  }
+
+  private closeAllSelects(except?: Blank): boolean {
+    let closed = false;
+    if (!this.cloze) {
+      return false;
+    }
+    for (const blank of this.cloze.blanks) {
+      if (except && blank === except) {
+        continue;
+      }
+      if (blank.selectOpen) {
+        blank.closeSelect();
+        closed = true;
+      }
+    }
+    return closed;
+  }
+
+  private getOpenSelectBlank(): Blank | null {
+    if (!this.cloze) {
+      return null;
+    }
+    for (const blank of this.cloze.blanks) {
+      if (blank.selectOpen) {
+        return blank;
+      }
+    }
+    return null;
+  }
+
+  private ensureSelectListeners(): void {
+    if (!this.selectOutsideBound) {
+      this.selectOutsideBound = true;
+      document.addEventListener('mousedown', this.onSelectOutsidePointer, true);
+    }
+    if (!this.selectRepositionBound) {
+      this.selectRepositionBound = true;
+      window.addEventListener('resize', this.onSelectViewportChange, true);
+      window.addEventListener('scroll', this.onSelectViewportChange, true);
+    }
+  }
+
+  private onSelectOutsidePointer = (event: Event) => {
+    const openBlank = this.getOpenSelectBlank();
+    if (!openBlank) {
+      return;
+    }
+
+    const target = event.target as Node;
+    const wrapper = this.jquery.find('#container_' + openBlank.id)[0]
+      || this.jquery.find('#' + openBlank.id).closest('.blank')[0]
+      || this.jquery.find('#' + openBlank.id).closest('.h5p-ab-custom-select')[0];
+
+    if (wrapper && wrapper.contains(target)) {
+      return;
+    }
+
+    openBlank.closeSelect();
+    this.refreshCloze();
+  };
+
+  private onSelectViewportChange = () => {
+    const openBlank = this.getOpenSelectBlank();
+    if (!openBlank) {
+      return;
+    }
+    this.positionSelectList(openBlank);
+    const ractive = this.blankRactives[openBlank.id];
+    if (ractive) {
+      ractive.set('blank.selectListStyle', openBlank.selectListStyle);
+      ractive.set('blank.selectOpenUp', openBlank.selectOpenUp);
+    }
+  };
+
+  private positionSelectList(blank: Blank): void {
+    const trigger = this.jquery.find('#' + blank.id)[0] as HTMLElement;
+    if (!trigger) {
+      blank.selectListStyle = '';
+      return;
+    }
+
+    const rect = trigger.getBoundingClientRect();
+    const maxListHeight = 14 * 16;
+    const estimatedHeight = Math.min(
+      maxListHeight,
+      Math.max(blank.choices.length, 1) * 28
+    );
+    const viewportPadding = 8;
+    const spaceBelow = window.innerHeight - rect.bottom - viewportPadding;
+    const spaceAbove = rect.top - viewportPadding;
+    const openUp = spaceBelow < estimatedHeight && spaceAbove > spaceBelow;
+
+    blank.selectOpenUp = openUp;
+
+    const parts = [
+      'position:fixed',
+      'left:' + Math.round(rect.left) + 'px',
+      'width:' + Math.round(rect.width) + 'px',
+      'z-index:10000',
+      'max-height:' + maxListHeight + 'px'
+    ];
+
+    if (openUp) {
+      parts.push('top:auto');
+      parts.push('bottom:' + Math.round(window.innerHeight - rect.top + 4) + 'px');
+    }
+    else {
+      parts.push('bottom:auto');
+      parts.push('top:' + Math.round(rect.bottom + 4) + 'px');
+    }
+
+    blank.selectListStyle = parts.join(';') + ';';
+  }
+
+  private openSelect(blank: Blank): void {
+    if (blank.isSelectDisabled()) {
+      return;
+    }
+
+    this.closeAllSelects(blank);
+    blank.selectOpen = true;
+    const selectedIndex = blank.choices.indexOf(blank.enteredText);
+    blank.selectHighlightIndex = selectedIndex >= 0 ? selectedIndex : 0;
+    this.ensureSelectListeners();
+    this.positionSelectList(blank);
+    this.refreshCloze();
+
+    setTimeout(() => {
+      if (!blank.selectOpen) {
+        return;
+      }
+      this.positionSelectList(blank);
+      const ractive = this.blankRactives[blank.id];
+      if (ractive) {
+        ractive.set('blank.selectListStyle', blank.selectListStyle);
+        ractive.set('blank.selectOpenUp', blank.selectOpenUp);
+      }
+    }, 0);
+  }
+
+  toggleSelect = (event, blank: Blank) => {
+    this.stopEvent(event);
+
+    if (blank.isSelectDisabled()) {
+      return;
+    }
+
+    if (blank.selectOpen) {
+      blank.closeSelect();
+      this.refreshCloze();
+      return;
+    }
+
+    this.openSelect(blank);
+  }
+
+  selectListPointer = (event) => {
+    // Keep mousedown inside the list from blurring / outside-closing before click.
+    this.stopEvent(event);
+  }
+
+  selectChoice = (event, blank: Blank, choice: string) => {
+    this.stopEvent(event);
+
+    if (blank.isSelectDisabled()) {
+      return;
+    }
+
+    blank.enteredText = choice == null ? '' : String(choice);
+    blank.closeSelect();
+    this.refreshCloze();
+    this.checkBlank(event, blank, 'change');
+
+    const trigger = this.jquery.find('#' + blank.id)[0] as HTMLElement;
+    if (trigger && typeof trigger.focus === 'function') {
+      trigger.focus();
+    }
+  }
+
+  selectKeydown = (event, blank: Blank) => {
+    const native = this.getNativeEvent(event);
+    if (!native) {
+      return;
+    }
+
+    const key = native.key || native.keyCode;
+    const isSpace = key === ' ' || key === 'Spacebar' || key === 32;
+    const isEnter = key === 'Enter' || key === 13;
+    const isEscape = key === 'Escape' || key === 'Esc' || key === 27;
+    const isDown = key === 'ArrowDown' || key === 40;
+    const isUp = key === 'ArrowUp' || key === 38;
+    const isHome = key === 'Home' || key === 36;
+    const isEnd = key === 'End' || key === 35;
+
+    if (blank.isSelectDisabled()) {
+      return;
+    }
+
+    if (!blank.selectOpen && (isEnter || isSpace || isDown || isUp)) {
+      this.stopEvent(event);
+      this.openSelect(blank);
+      return;
+    }
+
+    if (!blank.selectOpen) {
+      return;
+    }
+
+    if (isEscape) {
+      this.stopEvent(event);
+      blank.closeSelect();
+      this.refreshCloze();
+      return;
+    }
+
+    if (isDown || isUp || isHome || isEnd) {
+      this.stopEvent(event);
+      const last = Math.max(0, blank.choices.length - 1);
+      let index = blank.selectHighlightIndex;
+
+      if (isDown) {
+        index = Math.min(last, index + 1);
+      }
+      else if (isUp) {
+        index = Math.max(0, index - 1);
+      }
+      else if (isHome) {
+        index = 0;
+      }
+      else {
+        index = last;
+      }
+
+      blank.selectHighlightIndex = index;
+      this.refreshCloze();
+      return;
+    }
+
+    if (isEnter || isSpace) {
+      this.stopEvent(event);
+      const choice = blank.choices[blank.selectHighlightIndex];
+      this.selectChoice(event, blank, choice);
+      if (isEnter) {
+        this.checkBlank(event, blank, 'enter');
+      }
+    }
   }
 
   checkBlank = (event, blank: Blank, cause: string) => {
@@ -211,12 +484,20 @@ export class ClozeController {
   }
 
   reset = () => {
+    this.closeAllSelects();
     this.cloze.reset();
     this.refreshCloze();
   }
 
   showSolutions = () => {
+    this.closeAllSelects();
     this.cloze.showSolutions();
+    if (this.isSelectCloze) {
+      for (const blank of this.cloze.blanks) {
+        blank.selectInteractionLocked = true;
+        blank.closeSelect();
+      }
+    }
     this.refreshCloze();
   }
 
@@ -266,6 +547,10 @@ export class ClozeController {
     ractive.on("closeMessage", this.requestCloseTooltip);
     ractive.on("focus", this.focus);
     ractive.on("displayFeedback", this.displayFeedback);
+    ractive.on("toggleSelect", this.toggleSelect);
+    ractive.on("selectChoice", this.selectChoice);
+    ractive.on("selectKeydown", this.selectKeydown);
+    ractive.on("selectListPointer", this.selectListPointer);
 
     this.blankRactives[blank.id] = ractive;
   }
