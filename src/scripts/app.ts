@@ -37,6 +37,34 @@ const XAPI_ALTERNATIVE_EXTENSION = 'https://h5p.org/x-api/alternatives';
 const XAPI_CASE_SENSITIVITY = 'https://h5p.org/x-api/case-sensitivity';
 const XAPI_REPORTING_VERSION_EXTENSION = 'https://h5p.org/x-api/h5p-reporting-version';
 
+/**
+ * H5P.newRunnable copies ContentType onto constructor.prototype. Native ES
+ * classes have a non-writable prototype, so isRoot / getLibraryFilePath never
+ * land on the instance. Copy them onto the instance when missing.
+ */
+function ensureContentTypeApi(instance: any, extras: any): void {
+  if (typeof instance.isRoot === 'function') {
+    return;
+  }
+
+  const standalone = !!(extras && extras.standalone) || !(extras && extras.parent);
+  const ContentType = (H5P as any).ContentType;
+  const proto = typeof ContentType === 'function' ? ContentType(standalone).prototype : null;
+
+  if (proto && typeof proto.isRoot === 'function') {
+    instance.isRoot = proto.isRoot;
+  }
+  else {
+    instance.isRoot = function () {
+      return standalone;
+    };
+  }
+
+  if (typeof instance.getLibraryFilePath !== 'function' && proto && typeof proto.getLibraryFilePath === 'function') {
+    instance.getLibraryFilePath = proto.getLibraryFilePath;
+  }
+}
+
 export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: string): any; }) {
 
   private clozeController: ClozeController;
@@ -75,6 +103,7 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
    */
   constructor(config: any, contentId: string, contentData: any = {}) {
     super('advanced-blanks-cfrd');
+    ensureContentTypeApi(this, contentData);
 
     // Set mandatory default values for editor widgets that create content type instances
     config = extend({

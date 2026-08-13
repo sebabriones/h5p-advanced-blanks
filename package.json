@@ -1,6 +1,6 @@
 {
   "name": "h5p-advanced-blanks-cfrd",
-  "version": "1.0.15",
+  "version": "1.0.18",
   "description": "Complex fill the blanks (CFRD) — fork of H5P Advanced Blanks for CFRD-UDEC.",
   "private": true,
   "scripts": {
