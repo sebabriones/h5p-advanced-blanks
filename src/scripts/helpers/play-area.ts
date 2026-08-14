@@ -125,10 +125,10 @@ export function refreshInstructionsScale(instance: any): void {
 export function applyPlayAreaScale(instance: any, event?: any): void {
   const PlayArea = H5P.AdvancedBlanksCFRD && H5P.AdvancedBlanksCFRD.PlayArea;
   const design = instance.playAreaSize || (PlayArea ? PlayArea.getDesignSize() : null);
-  let $parent;
-  let width;
-  let scale;
+  let rootEl;
+  let layout;
   let fontSize;
+  let scaleKey;
 
   if (event && event.data && event.data.repositionOnly) {
     return;
@@ -143,28 +143,38 @@ export function applyPlayAreaScale(instance: any, event?: any): void {
     return;
   }
 
-  $parent = instance.$playArea.parent();
-  width = instance.$playArea.width();
+  rootEl = (instance.$container && instance.$container.length) ?
+    instance.$container[0] :
+    instance.$playArea[0];
+  layout = PlayArea.getLayoutDimensions(rootEl);
+  scaleKey = layout.scale.toFixed(4);
+  fontSize = layout.fontSize + 'px';
 
-  if (width <= 0) {
-    width = ($parent && $parent.width()) || design.baseWidth;
-  }
-
-  scale = PlayArea.getScale(width);
-  fontSize = (design.baseFontSize * scale) + 'px';
-
-  if (instance._abLastScaleKey === scale.toFixed(4) && instance._abLastWidth === width) {
+  if (
+    instance._abLastScaleKey === scaleKey &&
+    instance._abLastWidth === layout.width &&
+    instance._abLastHeightPx === layout.heightPx
+  ) {
     return;
   }
 
-  instance._abLastScaleKey = scale.toFixed(4);
-  instance._abLastWidth = width;
+  instance._abLastScaleKey = scaleKey;
+  instance._abLastWidth = layout.width;
+  instance._abLastHeightPx = layout.heightPx;
+
+  if (instance.$container && instance.$container.length) {
+    instance.$container.css({
+      width: layout.widthPx,
+      maxWidth: '100%',
+      height: layout.heightPx
+    });
+  }
 
   instance.$playArea.css({
     width: '100%',
     height: '',
     fontSize: fontSize,
-    '--ab-scale': scale.toFixed(4)
+    '--ab-scale': scaleKey
   });
 
   const $popup = instance.$playArea.find('.h5p-question-feedback.h5p-question-popup');
