@@ -65,6 +65,60 @@ function ensureContentTypeApi(instance: any, extras: any): void {
   }
 }
 
+/**
+ * Primer load: reintentar setActivityStarted con delays reales hasta Integration.contents['cid-…'].
+ * Solo marca ensured cuando Integration está lista.
+ */
+function ensureActivityStarted(instance: any): void {
+  const Question = (H5P as any).QuestionCFRD;
+  if (Question && typeof Question.ensureActivityStarted === 'function') {
+    Question.ensureActivityStarted(instance);
+    return;
+  }
+
+  if (!instance || instance._cfrdActivityStartEnsured || instance._cfrdEnsuringActivityStart) {
+    return;
+  }
+
+  instance._cfrdEnsuringActivityStart = true;
+  const delays = [0, 16, 50, 100, 250, 500];
+  let delayIndex = 0;
+
+  const isIntegrationReady = (): boolean => {
+    const cid = instance.contentId;
+    return cid != null &&
+      typeof (window as any).H5PIntegration !== 'undefined' &&
+      (window as any).H5PIntegration.contents &&
+      (window as any).H5PIntegration.contents['cid-' + cid];
+  };
+
+  const attempt = () => {
+    delete instance.activityStartTime;
+    if (typeof instance.setActivityStarted === 'function') {
+      instance.setActivityStarted();
+    }
+    else if (typeof instance.triggerXAPI === 'function') {
+      instance.triggerXAPI('attempted');
+      instance.activityStartTime = Date.now();
+    }
+
+    if (isIntegrationReady()) {
+      instance._cfrdEnsuringActivityStart = false;
+      instance._cfrdActivityStartEnsured = true;
+      return;
+    }
+
+    if (delayIndex >= delays.length) {
+      instance._cfrdEnsuringActivityStart = false;
+      return;
+    }
+
+    setTimeout(attempt, delays[delayIndex++]);
+  };
+
+  attempt();
+}
+
 export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: string): any; }) {
 
   private clozeController: ClozeController;
@@ -235,6 +289,8 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
             this.onCheckAnswer();
           this.toggleButtonVisibility(this.state);
         }
+        // ES class + isRoot frágil / Integration async: ensure attempted en primer montaje.
+        ensureActivityStarted(this);
       }
     })(this.attach);
   }
@@ -442,8 +498,9 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
     this.clozeController.reset();
     this.answered = false;
     this.moveToState(States.ongoing);
-    // Reset timer
-    this.setActivityStarted(true);
+    // Nuevo intento: sin delete, setActivityStarted es no-op.
+    delete (this as any).activityStartTime;
+    this.setActivityStarted();
   }
 
   private showFeedback() {
