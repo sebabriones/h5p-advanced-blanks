@@ -4,9 +4,9 @@
   "contentType": "Question",
   "majorVersion": 1,
   "minorVersion": 0,
-  "patchVersion": 25,
+  "patchVersion": 26,
   "runnable": 1,
-  "author": "CFRD-UDEC",
+  "author": "sbriones (CFRD-UDEC)",
   "license": "MIT",
   "machineName": "H5P.AdvancedBlanksCFRD",
   "coreApi": {
