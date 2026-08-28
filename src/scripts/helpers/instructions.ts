@@ -40,9 +40,21 @@ export function getInstructionsOptions(instance: any): any {
 }
 
 /**
+ * Embedded instances (Course Presentation, Interactive Video) delegate
+ * instructions to the host, which sizes them for the whole activity.
+ */
+export function isEmbeddedInstance(instance: any): boolean {
+  return !!(instance && typeof instance.isRoot === 'function' && !instance.isRoot());
+}
+
+/**
  * Attach instructions after the question DOM is ready.
  */
 export function scheduleInstructionsAttach(instance: any, $fallbackContainer: any): void {
+  if (isEmbeddedInstance(instance)) {
+    return;
+  }
+
   [0, 200, 500].forEach((delay) => {
     setTimeout(() => {
       const instructions = getInstructionsOptions(instance);
