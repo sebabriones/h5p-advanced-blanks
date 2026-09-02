@@ -83,8 +83,8 @@
 }
 
 .h5p-no-frame > .h5p-question.h5p-advanced-blanks-cfrd > .h5p-question-buttons.h5p-question-visible {
-  margin-left: 1em !important;
-  margin-right: 1em !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   margin-bottom: 1em;
 }
 
@@ -106,7 +106,8 @@
 .h5p-no-frame > .h5p-question.h5p-advanced-blanks-cfrd:has(> .h5p-question-scorebar.h5p-question-visible) > .h5p-question-buttons.h5p-question-visible,
 .h5p-no-frame > .h5p-question.h5p-advanced-blanks-cfrd:has(> .h5p-question-scorebar.h5p-question-visible) > .h5p-question-buttons.has-scorebar,
 .h5p-no-frame > .h5p-question.h5p-advanced-blanks-cfrd:has(> .h5p-question-scorebar.h5p-question-visible) > .h5p-question-buttons.has-scorebar.wrap {
-  margin: 0 1em 1em 0 !important;
+  margin: 0 0 1em 0 !important;
+  padding-right: 1em;
 }
 
 /* Inline evaluation footer inside the 16:9 root (play area + scorebar + buttons). */
@@ -170,8 +171,9 @@
   width: 100% !important;
   min-width: 0;
   max-width: 100%;
-  margin: 0 1em 1em 0;
+  margin: 0 0 1em 0;
   padding-left: 0.5em;
+  padding-right: 1em;
 }
 
 .h5p-advanced-blanks-cfrd > .h5p-question-buttons .h5p-joubelui-button:not(.h5p-question-button-hidden) {
