@@ -12,7 +12,8 @@ import {
   applyPlayAreaScale,
   observePlayArea,
   scheduleDeferredResize,
-  usesFeedbackPopup
+  usesFeedbackPopup,
+  hoistFeedbackPopupToPlayArea
 } from './helpers/play-area';
 import {
   getContextLayoutClass,
@@ -251,14 +252,23 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
     if (typeof originalSetFeedback === 'function') {
       this.setFeedback = (content, score, maxScore, scoreBarLabel, helpText, popupSettings) => {
         const result = originalSetFeedback.call(this, content, score, maxScore, scoreBarLabel, helpText, popupSettings);
-        // Multi Choice pattern: do not reflow the evaluation footer when feedback is a popup
-        if (
-          this.$container &&
-          this.$container.length &&
-          !usesFeedbackPopup(content, popupSettings)
-        ) {
+
+        if (usesFeedbackPopup(content, popupSettings)) {
+          hoistFeedbackPopupToPlayArea(this);
+        }
+        else if (this.$container && this.$container.length) {
           scheduleInlineEvaluationLayout(this.$container, this);
         }
+
+        return result;
+      };
+    }
+
+    const originalShowFeedbackPopup = this.showFeedbackPopup;
+    if (typeof originalShowFeedbackPopup === 'function') {
+      this.showFeedbackPopup = (...args: any[]) => {
+        const result = originalShowFeedbackPopup.apply(this, args);
+        hoistFeedbackPopupToPlayArea(this);
         return result;
       };
     }

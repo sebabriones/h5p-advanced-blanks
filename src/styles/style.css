@@ -195,7 +195,19 @@
   padding-right: 1em;
 }
 
-/* Overall feedback popup (QuestionCFRD) */
+/* Overall feedback popup (QuestionCFRD) — hoisted as direct child of play-area. */
+.h5p-ab-play-area > .h5p-question-feedback.h5p-question-popup {
+  width: min(90%, 100%);
+  max-width: calc(100% - 2em);
+  z-index: 20;
+  background-color: var(--ab-feedback-bg, #ffffff);
+  color: var(--ab-feedback-color, #333333);
+}
+
+.h5p-ab-play-area > .h5p-question-feedback-tail {
+  z-index: 19;
+}
+
 .h5p-ab-play-area .h5p-question-feedback.h5p-question-popup,
 .h5p-advanced-blanks-cfrd .h5p-question-feedback.h5p-question-popup {
   width: min(90%, 100%);

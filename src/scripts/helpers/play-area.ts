@@ -49,7 +49,41 @@ export function usesFeedbackPopup(content: any, popupSettings: any): boolean {
 }
 
 /**
+ * QuestionCFRD appends the feedback popup inside .h5p-question-content.
+ * Move popup + tail to .h5p-ab-play-area so centering uses the play area.
+ * Must run before Question's deferred positionFeedbackPopup.
+ */
+export function hoistFeedbackPopupToPlayArea(instance: any): void {
+  const $playArea = instance && instance.$playArea;
+  let $popup;
+  let $tail;
+
+  if (!$playArea || !$playArea.length) {
+    return;
+  }
+
+  $popup = $playArea.find('.h5p-question-feedback.h5p-question-popup').first();
+  if (!$popup.length) {
+    return;
+  }
+
+  $tail = $popup.siblings('.h5p-question-feedback-tail');
+  if (!$tail.length) {
+    $tail = $playArea.find('.h5p-question-feedback-tail').first();
+  }
+
+  if (!$popup.parent().is($playArea)) {
+    $popup.appendTo($playArea);
+  }
+
+  if ($tail.length && !$tail.parent().is($playArea)) {
+    $tail.appendTo($playArea);
+  }
+}
+
+/**
  * Move inline scorebar/feedback out of the play area.
+ * Popup feedback stays in the play area (direct child after hoist).
  */
 export function normalizeInlineEvaluationLayout($container: any): void {
   const $ = H5P.jQuery;
