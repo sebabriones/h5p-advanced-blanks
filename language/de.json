@@ -406,7 +406,8 @@
         {
           "label": "Feedback text color"
         },
-        {
+        {},
+        {},        {
           "widgets": [
             {
               "label": "Default"
@@ -438,7 +439,7 @@
                   {
                     "label": "Highlighted lead text color"
                   },
-                  {
+                  {},                  {
                     "label": "Text alignment",
                     "description": "Only used when no feedback image is set. With an image, text alignment follows image position (left/right: left aligned, above: centered).",
                     "options": [

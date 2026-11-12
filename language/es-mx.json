@@ -407,6 +407,15 @@
           "label": "Color del texto de la retroalimentación"
         },
         {
+          "label": "Tamaño de letra del cuerpo del feedback",
+          "description": "Tamaño de letra del texto principal del feedback en el popup (relativo a la tipografía del contenido).",
+          "default": 1
+        },
+        {
+          "label": "Tamaño del icono de cerrar el feedback",
+          "description": "Tamaño del icono de cerrar (X) del popup de feedback.",
+          "default": 1.2
+        },        {
           "widgets": [
             {
               "label": "Predeterminado"
@@ -439,6 +448,10 @@
                     "label": "Color del texto destacado"
                   },
                   {
+                    "label": "Tamaño de letra del texto destacado",
+                    "description": "Tamaño de letra del texto destacado inicial (relativo a la tipografía del contenido).",
+                    "default": 1
+                  },                  {
                     "label": "Alineación del texto",
                     "description": "Solo se usa cuando no hay imagen de retroalimentación. Con imagen, la alineación sigue la posición de la imagen (izquierda/derecha: alineado a la izquierda; arriba: centrado).",
                     "options": [

@@ -175,6 +175,8 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
       overallFeedback: {
         popupBackgroundColor: '#ffffff',
         feedbackTextColor: '#333333',
+        feedbackBodyFontSize: 1,
+        feedbackCloseIconSize: 1.2,
         overallFeedback: []
       }
     }, config);
@@ -184,17 +186,23 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
       config.overallFeedback = {
         popupBackgroundColor: '#ffffff',
         feedbackTextColor: '#333333',
+        feedbackBodyFontSize: 1,
+        feedbackCloseIconSize: 1.2,
         overallFeedback: config.overallFeedback
       };
     }
-    else if (
-      config.overallFeedback &&
-      typeof config.overallFeedback === 'object' &&
-      !config.overallFeedback.popupBackgroundColor
-    ) {
-      config.overallFeedback.popupBackgroundColor = '#ffffff';
+    else if (config.overallFeedback && typeof config.overallFeedback === 'object') {
+      if (!config.overallFeedback.popupBackgroundColor) {
+        config.overallFeedback.popupBackgroundColor = '#ffffff';
+      }
       if (!config.overallFeedback.feedbackTextColor) {
         config.overallFeedback.feedbackTextColor = '#333333';
+      }
+      if (config.overallFeedback.feedbackBodyFontSize == null) {
+        config.overallFeedback.feedbackBodyFontSize = 1;
+      }
+      if (config.overallFeedback.feedbackCloseIconSize == null) {
+        config.overallFeedback.feedbackCloseIconSize = 1.2;
       }
     }
 
@@ -528,6 +536,9 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
         alwaysShowClose: true,
         dismissible: true,
         popupBackgroundColor: resolved.popupBackgroundColor,
+        feedbackBodyFontSize: resolved.feedbackBodyFontSize,
+        feedbackLeadFontSize: resolved.feedbackLeadFontSize,
+        feedbackCloseIconSize: resolved.feedbackCloseIconSize,
         plainText: resolved.plainText,
         onClose: () => {
           this.showButton('show-feedback');
