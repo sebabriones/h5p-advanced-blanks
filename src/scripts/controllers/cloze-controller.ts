@@ -54,6 +54,10 @@ export class ClozeController {
   private blankRactives: { [id: string]: Ractive.Ractive } = {};
 
   public get maxScore(): number {
+    // CP puede consultar el contrato antes de initialize()/attach.
+    if (!this.cloze) {
+      return 0;
+    }
     return this.cloze.blanks.length;
   }
 
@@ -62,10 +66,16 @@ export class ClozeController {
    * @return {boolean} True if there is at least one blank with more than one solution.
    */
   public get hasAlternatives(): boolean {
+    if (!this.cloze) {
+      return false;
+    }
     return this.cloze.blanks.some(b => b.correctAnswers[0].alternatives.length > 1);
   }
 
   public get currentScore(): number {
+    if (!this.cloze) {
+      return 0;
+    }
     const score = this.cloze.blanks.reduce((score, b) => {
       const notShowingSolution = !b.isShowingSolution;
       const correctAnswerGiven = b.correctAnswers[0].alternatives.indexOf(b.enteredText || '') !== -1;
@@ -89,6 +99,9 @@ export class ClozeController {
   }
 
   public get isSolved(): boolean {
+    if (!this.cloze) {
+      return false;
+    }
     return this.cloze.isSolved;
   }
 
@@ -595,6 +608,9 @@ export class ClozeController {
   }
 
   public serializeCloze(): string[] {
+    if (!this.cloze) {
+      return [];
+    }
     return this.cloze.serialize();
   }
 
