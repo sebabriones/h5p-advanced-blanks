@@ -642,9 +642,23 @@
           ]
         },
         {
+          "label": "Área del ejercicio",
+          "description": "Espaciado interno del bloque de texto del ejercicio (el texto con espacios en blanco).",
+          "fields": [
+            {
+              "label": "Relleno del ejercicio",
+              "description": "Relleno interno en em en todos los lados del bloque de texto del ejercicio. El valor predeterminado es 0."
+            }
+          ]
+        },
+        {
           "label": "Texto",
           "description": "Tamaño, interlineado y color del párrafo del ejercicio y del panel de contexto. El color del texto dentro de los espacios se configura en Colores del espacio en blanco. Los tamaños son números sin unidad en em (por ejemplo 1, no 1em).",
           "fields": [
+            {
+              "label": "Color del texto del ejercicio",
+              "description": "Color del párrafo del ejercicio alrededor de los espacios. Para el texto dentro de los espacios, usa Color del texto del espacio en blanco."
+            },
             {
               "label": "Tamaño de fuente del ejercicio",
               "description": "Tamaño del párrafo del ejercicio (los espacios lo heredan). Relativo al área de juego (em). Se guarda como número (valor predeterminado 1)."
@@ -654,11 +668,8 @@
               "description": "Altura de línea del párrafo del ejercicio (multiplicador sin unidad)."
             },
             {
-              "label": "Color del texto del ejercicio",
-              "description": "Color del párrafo del ejercicio alrededor de los espacios. Para el texto dentro de los espacios, usa Color del texto del espacio en blanco."
-            },
-            {
-              "label": "Color del texto de contexto"
+              "label": "Color del texto de contexto",
+              "description": "Color del texto del panel de contexto junto al ejercicio."
             },
             {
               "label": "Tamaño de fuente del contexto",

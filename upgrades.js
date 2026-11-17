@@ -145,6 +145,27 @@ H5PUpgrades['H5P.AdvancedBlanksCFRD'] = (function () {
           };
 
           finished(null, parameters);
+        },
+
+        /**
+         * Rename appearance.textStyle → appearance.textColors (CFRD label convention).
+         * Note: H5P core often skips patch-level upgrades on 1.0.x; presave.js and
+         * the player also migrate / fall back for the same key.
+         *
+         * @param {object} parameters
+         * @param {function} finished
+         */
+        41: function (parameters, finished) {
+          var appearance = parameters && parameters.appearance;
+
+          if (appearance && appearance.textStyle) {
+            if (!appearance.textColors) {
+              appearance.textColors = appearance.textStyle;
+            }
+            delete appearance.textStyle;
+          }
+
+          finished(null, parameters);
         }
       }
     }

@@ -22,6 +22,7 @@ export interface AppearanceDefaults {
   selectListSelectedText: string;
   feedbackBackground: string;
   feedbackTextColor: string;
+  questionPadding: number;
   clozeColor: string;
   clozeFontSize: number;
   clozeLineHeight: number;
@@ -64,6 +65,7 @@ const APPEARANCE_DEFAULTS: AppearanceDefaults = {
   selectListSelectedText: '#ffffff',
   feedbackBackground: '#ffffff',
   feedbackTextColor: '#333333',
+  questionPadding: 0,
   clozeColor: '#333333',
   clozeFontSize: 1,
   clozeLineHeight: 1.7,
@@ -121,6 +123,7 @@ const CSS_VAR_KEYS: { [key: string]: string } = {
 
 const CSS_EM_VAR_KEYS: { [key: string]: string } = {
   blankBorderRadius: '--ab-blank-border-radius',
+  questionPadding: '--ab-question-padding',
   clozeFontSize: '--ab-cloze-font-size',
   contextFontSize: '--ab-context-font-size'
 };
@@ -315,7 +318,9 @@ function getFeedbackColors(overallFeedback: any): { feedbackBackground: string; 
 function readAppearanceFields(appearance: any, overallFeedback?: any): Partial<AppearanceDefaults> {
   const blanks = (appearance && appearance.blankColors) || {};
   const selectDropdown = blanks.selectDropdown || {};
-  const text = (appearance && appearance.textStyle) || {};
+  // textColors is the CFRD name; textStyle kept as runtime fallback for unsaved legacy content.
+  const text = (appearance && (appearance.textColors || appearance.textStyle)) || {};
+  const questionArea = (appearance && appearance.questionArea) || {};
   const correct = (appearance && appearance.correctColors) || {};
   const wrong = (appearance && appearance.wrongColors) || {};
   const retry = (appearance && appearance.retryColors) || {};
@@ -328,6 +333,7 @@ function readAppearanceFields(appearance: any, overallFeedback?: any): Partial<A
 
   return {
     playAreaBackground: appearance && appearance.playAreaBackground,
+    questionPadding: questionArea.padding,
     blankBackground: resolveFill(blanks, {
       solidKey: 'background',
       fallbackSolid: APPEARANCE_DEFAULTS.blankBackground
@@ -584,6 +590,15 @@ export function applyActivityAppearance(instance: any): void {
   const appearance =
     (instance.options && instance.options.appearance) ||
     (instance.params && instance.params.appearance);
+
+  // Normalize legacy key in memory (patch upgrades may not run on 1.0.x).
+  if (appearance && appearance.textStyle) {
+    if (!appearance.textColors) {
+      appearance.textColors = appearance.textStyle;
+    }
+    delete appearance.textStyle;
+  }
+
   const overallFeedback =
     (instance.options && instance.options.overallFeedback) ||
     (instance.params && instance.params.overallFeedback);

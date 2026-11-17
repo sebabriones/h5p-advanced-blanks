@@ -65,6 +65,14 @@ function migrateLegacyParameters(p) {
       overallFeedback: ranges
     };
   }
+
+  /* ── Patch 41: appearance.textStyle → appearance.textColors ── */
+  if (p.appearance && p.appearance.textStyle) {
+    if (!p.appearance.textColors) {
+      p.appearance.textColors = p.appearance.textStyle;
+    }
+    delete p.appearance.textStyle;
+  }
 }
 
 /**

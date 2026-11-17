@@ -2,6 +2,7 @@
   --ab-scale: 1;
   --ab-spacing-m: calc(1em * var(--ab-scale, 1));
   --ab-play-area-bg: #ffffff;
+  --ab-question-padding: 0;
   --ab-cloze-color: #333333;
   --ab-cloze-font-size: 1em;
   --ab-cloze-line-height: 1.7;
@@ -422,6 +423,8 @@
 /* Text */
 
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container {
+  box-sizing: border-box;
+  padding: var(--ab-question-padding, 0);
   font-size: var(--ab-cloze-font-size, 1em);
   color: var(--ab-cloze-color, #333333);
   line-height: var(--ab-cloze-line-height, 1.7);

@@ -688,9 +688,23 @@
           ]
         },
         {
+          "label": "Exercise area",
+          "description": "Inner spacing of the exercise paragraph block (the cloze text).",
+          "fields": [
+            {
+              "label": "Exercise padding",
+              "description": "Inner padding in em on all sides of the exercise text block. Default is 0."
+            }
+          ]
+        },
+        {
           "label": "Text",
           "description": "Font size, line height and color of the exercise paragraph and the context panel. Blank input color is configured under Blank colors. Sizes are unitless numbers in em (for example 1, not 1em).",
           "fields": [
+            {
+              "label": "Exercise text color",
+              "description": "Color of the exercise paragraph around the blanks. To change the text inside blanks, use Blank text color under Blank colors."
+            },
             {
               "label": "Exercise font size",
               "description": "Size of the exercise paragraph (and blanks inherit it). Relative to the play area (em). Stored as a number (default 1)."
@@ -700,11 +714,8 @@
               "description": "Line height of the exercise paragraph (unitless multiplier)."
             },
             {
-              "label": "Exercise text color",
-              "description": "Color of the exercise paragraph around the blanks. To change the text inside blanks, use Blank text color under Blank colors."
-            },
-            {
-              "label": "Context text color"
+              "label": "Context text color",
+              "description": "Color of the context panel text beside the exercise."
             },
             {
               "label": "Context font size",
