@@ -449,8 +449,8 @@
  */
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container p,
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container div,
-.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container span,
-.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container li,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container span:not(.h5p-ab-select-label):not(.h5p-ab-select-arrow):not(.h5p-ab-custom-select):not(.h5p-input-wrapper):not(.blank):not(.h5p-tip-container),
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container li:not(.h5p-ab-select-option),
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container td,
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container th {
   color: inherit !important;
@@ -577,7 +577,7 @@
 .h5p-advanced-blanks .h5p-ab-select-list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.2em 0;
   border: 1px solid var(--ab-blank-border-color, #a0a0a0);
   border-radius: var(--ab-blank-border-radius, 0.25em);
   background: var(--ab-select-list-bg, #ffffff);
@@ -589,13 +589,16 @@
 }
 
 .h5p-advanced-blanks .h5p-ab-select-option {
-  padding: 0.25em 0.5em;
+  /* Match trigger text inset; keep room so text is not flush to the edge. */
+  padding: 0.4em 0.85em;
+  box-sizing: border-box;
   cursor: pointer;
   line-height: 1.3em;
   min-height: 1.3em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--ab-select-list-color, #333333);
 }
 
 .h5p-advanced-blanks .h5p-ab-select-option:hover,
@@ -604,17 +607,33 @@
   color: var(--ab-select-list-hover-color, #333333);
 }
 
+/* Empty leading choice (no value yet): match list background, not selected colors. */
+.h5p-advanced-blanks .h5p-ab-select-option.is-placeholder {
+  background: var(--ab-select-list-bg, #ffffff);
+  color: var(--ab-select-list-color, #333333);
+}
+
+.h5p-advanced-blanks .h5p-ab-select-option.is-placeholder:hover,
+.h5p-advanced-blanks .h5p-ab-select-option.is-placeholder.is-highlighted {
+  background: var(--ab-select-list-hover-bg, #e8f4ff);
+  color: var(--ab-select-list-hover-color, #333333);
+}
+
+/*
+ * Mark current value with inset box-shadow (not outline): outline is clipped by
+ * the list's overflow-y:auto when selected bg is close to the list bg.
+ */
 .h5p-advanced-blanks .h5p-ab-select-option.is-selected {
   background: var(--ab-select-list-selected-bg, #333333);
   color: var(--ab-select-list-selected-color, #ffffff);
+  box-shadow: inset 0 0 0 2px var(--ab-blank-focus-border-color, #7fb8ff);
 }
 
 .h5p-advanced-blanks .h5p-ab-select-option.is-selected.is-highlighted,
 .h5p-advanced-blanks .h5p-ab-select-option.is-selected:hover {
   background: var(--ab-select-list-selected-bg, #333333);
   color: var(--ab-select-list-selected-color, #ffffff);
-  outline: 2px solid var(--ab-blank-focus-border-color, #7fb8ff);
-  outline-offset: -2px;
+  box-shadow: inset 0 0 0 2px var(--ab-blank-focus-border-color, #7fb8ff);
 }
 
 /* Legacy native select rules kept harmless if any remain */

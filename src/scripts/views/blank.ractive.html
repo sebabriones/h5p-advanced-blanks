@@ -48,8 +48,8 @@
           on-mousedown="@this.fire('selectListPointer', event, blank)">
         {{#each blank.choices:i}}
           <li role="option"
-              class="h5p-ab-select-option{{#if this === blank.enteredText}} is-selected{{/if}}{{#if i === blank.selectHighlightIndex}} is-highlighted{{/if}}"
-              aria-selected="{{#if this === blank.enteredText}}true{{else}}false{{/if}}"
+              class="h5p-ab-select-option {{#if this === blank.enteredText && this}}is-selected{{elseif this === blank.enteredText}}is-placeholder{{/if}}{{#if i === blank.selectHighlightIndex}} is-highlighted{{/if}}"
+              aria-selected="{{#if this === blank.enteredText && this}}true{{else}}false{{/if}}"
               on-click="@this.fire('selectChoice', event, blank, this)">{{this}}</li>
         {{/each}}
       </ul>
