@@ -465,6 +465,29 @@ function getCssVarValue(merged: AppearanceDefaults, key: string): string {
   return (merged as any)[key];
 }
 
+/**
+ * Convert #rgb / #rrggbb / rgb() / rgba() to rgba(..., alpha) for highlight wash.
+ */
+function toRgba(color: string, alpha: number): string {
+  const value = String(color || '').trim();
+  const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(value);
+  if (hex) {
+    let raw = hex[1];
+    if (raw.length === 3) {
+      raw = raw[0] + raw[0] + raw[1] + raw[1] + raw[2] + raw[2];
+    }
+    const r = parseInt(raw.slice(0, 2), 16);
+    const g = parseInt(raw.slice(2, 4), 16);
+    const b = parseInt(raw.slice(4, 6), 16);
+    return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+  }
+  const rgb = /^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i.exec(value);
+  if (rgb) {
+    return 'rgba(' + rgb[1] + ', ' + rgb[2] + ', ' + rgb[3] + ', ' + alpha + ')';
+  }
+  return 'rgba(183, 28, 28, ' + alpha + ')';
+}
+
 function applyVarsToElement(el: HTMLElement, merged: AppearanceDefaults): void {
   let key: string;
   for (key in CSS_VAR_KEYS) {
@@ -487,6 +510,11 @@ function applyVarsToElement(el: HTMLElement, merged: AppearanceDefaults): void {
       el.style.setProperty(CSS_PX_VAR_KEYS[key], getCssVarValue(merged, key));
     }
   }
+
+  // Spelling / !!highlight!! follow wrong text color (no separate semantics fields).
+  const wrongText = pickString(merged.wrongText, APPEARANCE_DEFAULTS.wrongText);
+  el.style.setProperty('--ab-spelling-color', wrongText);
+  el.style.setProperty('--ab-highlight-bg', toRgba(wrongText, 0.2));
 }
 
 export function applyAppearanceVars($container: any, appearance: any, overallFeedback?: any): AppearanceDefaults {

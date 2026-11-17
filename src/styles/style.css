@@ -34,6 +34,9 @@
   --ab-retry-bg: #ffff99;
   --ab-retry-border-color: #ffff99;
   --ab-retry-color: #000000;
+  --ab-spelling-color: var(--ab-wrong-color, #b71c1c);
+  --ab-highlight-bg: rgba(183, 28, 28, 0.2);
+  --ab-tip-shadow-color: #000000;
   --ab-scrollbar-width: 8px;
   --ab-scrollbar-track: #e8e8e8;
   --ab-scrollbar-thumb: #b0b0b0;
@@ -226,13 +229,12 @@
 .h5p-advanced-blanks-cfrd .h5p-question-feedback.h5p-question-popup .h5p-question-feedback-content-text,
 .h5p-advanced-blanks-cfrd .h5p-question-feedback.h5p-question-popup .h5p-overall-feedback,
 .h5p-advanced-blanks-cfrd .h5p-question-feedback.h5p-question-popup .h5p-overall-feedback__text {
-  font-size: 1em;
+  /* Do not force 1em — let QuestionCFRD / overallFeedback font-size apply. */
   line-height: 1.25em;
 }
 
 .h5p-ab-play-area .h5p-question-feedback.h5p-question-popup .h5p-question-feedback-close,
 .h5p-advanced-blanks-cfrd .h5p-question-feedback.h5p-question-popup .h5p-question-feedback-close {
-  font-size: 1em;
   line-height: 1;
 }
 
@@ -425,6 +427,24 @@
   line-height: var(--ab-cloze-line-height, 1.7);
 }
 
+/*
+ * Appearance textStyle must win over inline font styles left in blanksText HTML
+ * (editor used to allow font.color/size/family). Blanks keep their own color below.
+ */
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container p,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container div,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container span,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container li,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container td,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container th,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container h1,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container h2,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container h3 {
+  color: inherit !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+
 .h5p-advanced-blanks #h5p-cloze-container p,
 .h5p-advanced-blanks #h5p-cloze-container div {
   line-height: var(--ab-cloze-line-height, 1.7);
@@ -451,7 +471,8 @@
     border-radius: var(--ab-blank-border-radius, 0.25em);
     border: var(--ab-blank-border-width, 1px) solid var(--ab-blank-border-color, #a0a0a0);
     background: var(--ab-blank-bg, #ffffff);
-    color: var(--ab-blank-color, #333333);
+    /* Beat cloze inherit !important so blankColors.text still applies. */
+    color: var(--ab-blank-color, #333333) !important;
     padding: 0.1875em 1.5em 0.1875em 0.5em;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -597,7 +618,7 @@
 .h5p-advanced-blanks .blank.correct .h5p-text-input {
     background: var(--ab-correct-bg, #9dd8bb);
     border: 1px solid var(--ab-correct-border-color, #9dd8bb);
-    color: var(--ab-correct-color, #255c41);
+    color: var(--ab-correct-color, #255c41) !important;
 }
 
 .h5p-advanced-blanks .blank.correct .h5p-input-wrapper:after {
@@ -615,9 +636,9 @@
 /* Incorrect answers */
 
 .h5p-advanced-blanks .blank.error .h5p-text-input {
-    background-color: var(--ab-wrong-bg, #f7d0d0);
+    background: var(--ab-wrong-bg, #f7d0d0);
     border: 1px solid var(--ab-wrong-border-color, #f7d0d0);
-    color: var(--ab-wrong-color, #b71c1c);
+    color: var(--ab-wrong-color, #b71c1c) !important;
     text-decoration: line-through;
 }
 
@@ -633,12 +654,12 @@
 }
 
 
-/* Spelling errors */
+/* Spelling errors (retry state) */
 
 .h5p-advanced-blanks .blank.retry .h5p-text-input {
-    background-color: var(--ab-retry-bg, #ffff99);
+    background: var(--ab-retry-bg, #ffff99);
     border: 1px solid var(--ab-retry-border-color, #ffff99);
-    color: var(--ab-retry-color, #000000);
+    color: var(--ab-retry-color, #000000) !important;
 }
 
 .h5p-advanced-blanks .blank.retry .h5p-input-wrapper:after {
@@ -649,7 +670,7 @@
     font-family: 'H5PFontAwesome4';
     text-decoration: none;
     content: "\f00d";
-    color: var(--ab-wrong-color, #b71c1c);
+    color: var(--ab-retry-color, #000000);
 }
 
 
@@ -663,11 +684,11 @@
 }
 
 
-/* Highlight in spelling mistake marker */
+/* Highlight in spelling mistake marker (follows wrong / spelling color) */
 
 .spelling-mistake .missing-character,
 .spelling-mistake .mistaken-character {
-    color: red;
+    color: var(--ab-spelling-color, var(--ab-wrong-color, #b71c1c));
     font-weight: bold;
     animation-duration: 500ms;
     animation-name: blink-color;
@@ -677,10 +698,10 @@
 
 @keyframes blink-color {
     from {
-        color: initial;
+        color: transparent;
     }
     to {
-        color: red;
+        color: var(--ab-spelling-color, var(--ab-wrong-color, #b71c1c));
     }
 }
 
@@ -689,10 +710,10 @@
 }
 
 
-/* Highlights in text */
+/* Highlights in text (!!…!! markers) */
 
 .h5p-advanced-blanks .highlighted {
-    background-color: rgba(255, 0, 0, 0.2);
+    background-color: var(--ab-highlight-bg, rgba(183, 28, 28, 0.2));
     padding: 0.4em;
     margin: -0.4em;
     animation-duration: 1000ms;
@@ -703,10 +724,10 @@
 
 @keyframes blink-background-color {
     from {
-        background-color: initial;
+        background-color: transparent;
     }
     to {
-        background-color: rgba(255, 0, 0, 0.2);
+        background-color: var(--ab-highlight-bg, rgba(183, 28, 28, 0.2));
     }
 }
 
@@ -746,7 +767,7 @@
 
 /* improves appearance of h5p tip shadows */
 .h5p-advanced-blanks .joubel-icon-tip-normal .h5p-icon-shadow:before {
-  color: black;
+  color: var(--ab-tip-shadow-color, #000000);
   opacity: 0.13;
 }
 
@@ -780,13 +801,13 @@
 
 .h5p-advanced-blanks .h5p-advanced-blanks-select-mode .blank.error.has-pending-feedback button.h5p-notification,
 .h5p-advanced-blanks .h5p-advanced-blanks-type-mode .blank.error.has-pending-feedback .h5p-input-wrapper:before {
-    color: #b71c1c;
+    color: var(--ab-wrong-color, #b71c1c);
 }
 
 .h5p-advanced-blanks .h5p-advanced-blanks-select-mode .blank.retry.has-pending-feedback button.h5p-notification,
 .h5p-advanced-blanks .h5p-advanced-blanks-type-mode .blank.retry.has-pending-feedback .h5p-input-wrapper:before {
-    color: #ffff00;
-    text-shadow: 0px 0px 0.5em black;
+    color: var(--ab-retry-bg, #ffff99);
+    text-shadow: 0 0 0.5em var(--ab-tip-shadow-color, #000000);
 }
 
 @keyframes shake {

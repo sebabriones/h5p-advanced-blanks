@@ -1032,9 +1032,9 @@
           "sup"
         ],
         "font": {
-          "size": true,
-          "family": true,
-          "color": true,
+          "size": false,
+          "family": false,
+          "color": false,
           "background": true
         }
       },
