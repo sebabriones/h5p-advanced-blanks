@@ -1610,21 +1610,21 @@
             "options": [
               {
                 "value": "caret",
-                "label": "Caret (triangle)"
+                "label": "Triangle"
               },
               {
                 "value": "chevron",
-                "label": "Chevron"
+                "label": "Chevron (V)"
               },
               {
                 "value": "angle",
                 "label": "Angle"
               },
-            {
-              "value": "none",
-              "label": "None"
-            }
-          ]
+              {
+                "value": "none",
+                "label": "None"
+              }
+            ]
         },
         {
           "name": "selectDropdown",

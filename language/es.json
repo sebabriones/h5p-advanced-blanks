@@ -602,10 +602,10 @@
               "description": "Icono en los espacios de selección. Se oculta cuando aparecen los iconos de respuesta correcta o incorrecta.",
               "options": [
                 {
-                  "label": "Caret (triángulo)"
+                  "label": "Triángulo"
                 },
                 {
-                  "label": "Chevron"
+                  "label": "Ángulo en V"
                 },
                 {
                   "label": "Ángulo"

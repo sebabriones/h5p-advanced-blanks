@@ -390,18 +390,30 @@
   display: none;
 }
 
+/* Firefox (+ standard) scrollbar colors */
+.h5p-advanced-blanks-cfrd .h5p-ab-play-area,
+.h5p-ab-play-area .h5p-question-content,
+.h5p-ab-context,
+.h5p-ab-task-column {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ab-scrollbar-thumb, #b0b0b0) var(--ab-scrollbar-track, #e8e8e8);
+}
+
+.h5p-advanced-blanks-cfrd .h5p-ab-play-area::-webkit-scrollbar,
 .h5p-ab-play-area .h5p-question-content::-webkit-scrollbar,
 .h5p-ab-context::-webkit-scrollbar,
 .h5p-ab-task-column::-webkit-scrollbar {
   width: var(--ab-scrollbar-width, 8px);
 }
 
+.h5p-advanced-blanks-cfrd .h5p-ab-play-area::-webkit-scrollbar-track,
 .h5p-ab-play-area .h5p-question-content::-webkit-scrollbar-track,
 .h5p-ab-context::-webkit-scrollbar-track,
 .h5p-ab-task-column::-webkit-scrollbar-track {
   background: var(--ab-scrollbar-track, #e8e8e8);
 }
 
+.h5p-advanced-blanks-cfrd .h5p-ab-play-area::-webkit-scrollbar-thumb,
 .h5p-ab-play-area .h5p-question-content::-webkit-scrollbar-thumb,
 .h5p-ab-context::-webkit-scrollbar-thumb,
 .h5p-ab-task-column::-webkit-scrollbar-thumb {
@@ -409,6 +421,7 @@
   border-radius: 4px;
 }
 
+.h5p-advanced-blanks-cfrd .h5p-ab-play-area::-webkit-scrollbar-thumb:hover,
 .h5p-ab-play-area .h5p-question-content::-webkit-scrollbar-thumb:hover,
 .h5p-ab-context::-webkit-scrollbar-thumb:hover,
 .h5p-ab-task-column::-webkit-scrollbar-thumb:hover {
@@ -439,13 +452,32 @@
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container span,
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container li,
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container td,
-.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container th,
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container th {
+  color: inherit !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+
+/* Headings scale with cloze font-size but keep a small hierarchy. */
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container h1,
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container h2,
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container h3 {
   color: inherit !important;
-  font-size: inherit !important;
   font-family: inherit !important;
+  line-height: var(--ab-cloze-line-height, 1.7);
+  margin: 0 0 0.35em;
+}
+
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container h1 {
+  font-size: 1.5em !important;
+}
+
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container h2 {
+  font-size: 1.3em !important;
+}
+
+.h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container h3 {
+  font-size: 1.15em !important;
 }
 
 .h5p-advanced-blanks #h5p-cloze-container p,
@@ -469,7 +501,7 @@
 }
 
 .h5p-advanced-blanks .blank .h5p-text-input {
-    font-family: H5PDroidSans, sans-serif;
+    font-family: inherit;
     font-size: 1em;
     border-radius: var(--ab-blank-border-radius, 0.25em);
     border: var(--ab-blank-border-width, 1px) solid var(--ab-blank-border-color, #a0a0a0);

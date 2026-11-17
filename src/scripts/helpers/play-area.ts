@@ -4,6 +4,128 @@
 
 import { getInstructionsOptions } from './instructions';
 
+/** Wheel delta scale (softer steps). */
+const AB_WHEEL_SCALE = 0.45;
+/** Lerp factor per animation frame toward the target scrollTop. */
+const AB_WHEEL_LERP = 0.22;
+
+function pointInRect(x: number, y: number, rect: DOMRect): boolean {
+  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+}
+
+/**
+ * Find a visible Advanced Blanks play area under the pointer.
+ * Course Presentation often delivers wheel to the slide wrapper.
+ */
+function findPlayAreaUnderPoint(x: number, y: number): HTMLElement | null {
+  const nodes = document.querySelectorAll('.h5p-ab-play-area');
+  let i: number;
+  let el: Element;
+  let rect: DOMRect;
+
+  for (i = 0; i < nodes.length; i++) {
+    el = nodes[i];
+    rect = el.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) {
+      continue;
+    }
+    if (pointInRect(x, y, rect)) {
+      return el as HTMLElement;
+    }
+  }
+
+  return null;
+}
+
+function getWheelDeltaPixels(event: WheelEvent, playArea: HTMLElement): number {
+  let delta = event.deltaY;
+
+  if (event.deltaMode === 1) {
+    delta *= 16;
+  }
+  else if (event.deltaMode === 2) {
+    delta *= playArea.clientHeight || 1;
+  }
+
+  return delta * AB_WHEEL_SCALE;
+}
+
+function animatePlayAreaScroll(playArea: any): void {
+  if (!playArea || playArea._abWheelRaf) {
+    return;
+  }
+
+  playArea._abWheelRaf = window.requestAnimationFrame(function step() {
+    const target = playArea._abWheelTarget;
+    const current = playArea.scrollTop;
+    let next: number;
+
+    if (typeof target !== 'number' || Math.abs(target - current) < 0.5) {
+      if (typeof target === 'number') {
+        playArea.scrollTop = target;
+      }
+      playArea._abWheelRaf = 0;
+      return;
+    }
+
+    next = current + (target - current) * AB_WHEEL_LERP;
+    playArea.scrollTop = next;
+    playArea._abWheelRaf = window.requestAnimationFrame(step);
+  });
+}
+
+/**
+ * Forward wheel to the play area under the pointer (document capture).
+ * Needed inside Course Presentation where the event target is the slide wrapper.
+ */
+export function bindPlayAreaWheelContainment(playAreaEl: HTMLElement | null | undefined): void {
+  const win = window as any;
+
+  if (playAreaEl) {
+    (playAreaEl as any)._abWheelBound = true;
+  }
+
+  if (win._abDocWheelBound) {
+    return;
+  }
+
+  win._abDocWheelBound = true;
+  document.addEventListener('wheel', function (event: WheelEvent) {
+    const playArea: any = findPlayAreaUnderPoint(event.clientX, event.clientY);
+    let maxScroll: number;
+    let deltaY: number;
+    let base: number;
+    let next: number;
+
+    if (!playArea) {
+      return;
+    }
+
+    deltaY = getWheelDeltaPixels(event, playArea);
+    if (!deltaY) {
+      return;
+    }
+
+    maxScroll = playArea.scrollHeight - playArea.clientHeight;
+    if (maxScroll <= 1) {
+      return;
+    }
+
+    base = (typeof playArea._abWheelTarget === 'number') ?
+      playArea._abWheelTarget :
+      playArea.scrollTop;
+    next = Math.min(maxScroll, Math.max(0, base + deltaY));
+    if (next === playArea.scrollTop && next === playArea._abWheelTarget) {
+      return;
+    }
+
+    playArea._abWheelTarget = next;
+    animatePlayAreaScroll(playArea);
+    event.preventDefault();
+    event.stopPropagation();
+  }, { passive: false, capture: true });
+}
+
 /**
  * Wrap activity content in an inner play area; keep evaluation footer outside 16:9.
  */
@@ -34,6 +156,8 @@ export function setupPlayAreaLayout($container: any): any {
   else {
     $content.addClass('h5p-ab-task-only');
   }
+
+  bindPlayAreaWheelContainment($playArea[0]);
 
   return $playArea;
 }

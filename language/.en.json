@@ -648,10 +648,10 @@
               "description": "Icon on selection blanks. Hidden when correct/incorrect feedback icons are shown.",
               "options": [
                 {
-                  "label": "Caret (triangle)"
+                  "label": "Triangle"
                 },
                 {
-                  "label": "Chevron"
+                  "label": "Chevron (V)"
                 },
                 {
                   "label": "Angle"
