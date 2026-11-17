@@ -622,7 +622,8 @@
               ]
             },
             {
-              "label": "Blank text color"
+              "label": "Blank text color",
+              "description": "Color of the text typed or selected inside each blank. This is separate from the exercise paragraph color under Text."
             },
             {
               "label": "Use border"
@@ -688,14 +689,19 @@
         },
         {
           "label": "Text",
-          "description": "Font sizes and colors for the cloze text and the context panel. Sizes are unitless numbers in em (for example 1, not 1em).",
+          "description": "Font size, line height and color of the exercise paragraph and the context panel. Blank input color is configured under Blank colors. Sizes are unitless numbers in em (for example 1, not 1em).",
           "fields": [
             {
-              "label": "Cloze font size",
-              "description": "Text size relative to the play area (em). Stored as a number (default 1)."
+              "label": "Exercise font size",
+              "description": "Size of the exercise paragraph (and blanks inherit it). Relative to the play area (em). Stored as a number (default 1)."
             },
             {
-              "label": "Cloze text color"
+              "label": "Exercise line height",
+              "description": "Line height of the exercise paragraph (unitless multiplier)."
+            },
+            {
+              "label": "Exercise text color",
+              "description": "Color of the exercise paragraph around the blanks. To change the text inside blanks, use Blank text color under Blank colors."
             },
             {
               "label": "Context text color"
@@ -703,6 +709,10 @@
             {
               "label": "Context font size",
               "description": "Text size relative to the play area (em). Stored as a number (default 1)."
+            },
+            {
+              "label": "Context line height",
+              "description": "Line height of the context panel text (unitless multiplier)."
             }
           ]
         },

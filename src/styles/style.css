@@ -4,8 +4,10 @@
   --ab-play-area-bg: #ffffff;
   --ab-cloze-color: #333333;
   --ab-cloze-font-size: 1em;
+  --ab-cloze-line-height: 1.7;
   --ab-context-color: #555555;
   --ab-context-font-size: 1em;
+  --ab-context-line-height: 1.5;
   --ab-blank-bg: #ffffff;
   --ab-blank-color: #333333;
   --ab-blank-border-color: #a0a0a0;
@@ -43,8 +45,10 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  padding: var(--ab-spacing-m);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 1.25em 1.5em;
   background-color: var(--ab-play-area-bg);
   font-size: inherit;
 }
@@ -237,8 +241,18 @@
   max-height: min(50vh, 60%);
 }
 
-.h5p-ab-play-area:has(.h5p-instructions-tab-root) {
-  padding-top: max(3.25rem * var(--ab-scale, 1), 2.75rem);
+/* Keep cloze text clear of the absolute instructions tab (collapsed handle). */
+.h5p-has-instructions-tab .h5p-ab-play-area,
+.h5p-ab-play-area:has(.h5p-instructions-tab-root),
+.h5p-container:has(.h5p-instructions-tab-root) .h5p-ab-play-area {
+  padding-top: max(
+    calc(3.25rem * var(--ab-scale, 1)),
+    var(--h5p-ins-tab-clearance, 2.75rem)
+  );
+  scroll-padding-top: max(
+    calc(3.25rem * var(--ab-scale, 1)),
+    var(--h5p-ins-tab-clearance, 2.75rem)
+  );
 }
 
 .h5p-ab-play-area .h5p-question-image,
@@ -248,32 +262,37 @@
   flex-shrink: 0;
 }
 
+/*
+ * Fill the play area height and center the cloze / context visually.
+ * Uses safe center so short content sits mid-frame without jumping on Check.
+ */
 .h5p-ab-play-area .h5p-question-content {
+  /* Override QuestionCFRD margin: 1em (shifts a width:100% child to the right). */
+  margin: 0;
   flex: 1 1 0;
   min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
   width: 100%;
   box-sizing: border-box;
-}
-
-/* Vertically center cloze text when shorter than the play area */
-.h5p-ab-play-area .h5p-question-content.h5p-ab-task-only {
   display: flex;
   flex-direction: column;
+  /* flex-start first so long text does not sit under the instructions tab
+     when "safe center" is unsupported; safe center wins when available. */
+  justify-content: flex-start;
   justify-content: safe center;
 }
 
 .h5p-ab-play-area .h5p-advanced-blanks {
   width: 100%;
   box-sizing: border-box;
+  min-width: 0;
 }
 
-.h5p-ab-play-area .h5p-question-content.h5p-ab-with-context {
+.h5p-ab-play-area .h5p-question-content.h5p-ab-task-only > .h5p-advanced-blanks {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  justify-content: safe center;
   min-height: 0;
-  overflow: hidden;
 }
 
 .h5p-ab-play-area .h5p-ab-has-context {
@@ -281,16 +300,18 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  justify-content: safe center;
 }
 
 .h5p-ab-slide-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--ab-spacing-m, 1em);
-  align-items: stretch;
+  align-items: start;
+  align-items: safe center;
   width: 100%;
-  flex: 1 1 0;
-  min-height: 0;
+  min-height: 100%;
   box-sizing: border-box;
 }
 
@@ -306,18 +327,20 @@
 .h5p-ab-context {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  justify-content: safe center;
   min-height: 0;
   min-width: 0;
   gap: calc(0.5em * var(--ab-scale, 1));
   text-align: left;
-  overflow-y: auto;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .h5p-ab-context-text {
   flex: 0 0 auto;
   font-size: var(--ab-context-font-size, 1em);
-  line-height: 1.5;
+  line-height: var(--ab-context-line-height, 1.5);
   color: var(--ab-context-color, #555);
 }
 
@@ -351,10 +374,10 @@
 .h5p-ab-task-column {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  justify-content: safe center;
   min-height: 0;
   min-width: 0;
-  justify-content: center;
-  justify-content: safe center;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -399,20 +422,19 @@
 .h5p-ab-play-area .h5p-advanced-blanks #h5p-cloze-container {
   font-size: var(--ab-cloze-font-size, 1em);
   color: var(--ab-cloze-color, #333333);
+  line-height: var(--ab-cloze-line-height, 1.7);
 }
 
 .h5p-advanced-blanks #h5p-cloze-container p,
 .h5p-advanced-blanks #h5p-cloze-container div {
-    line-height: 1.8em;
-    margin: 0 0 1em;
-    text-align: justify;
+  line-height: var(--ab-cloze-line-height, 1.7);
+  margin: 0 0 0.35em;
+  text-align: unset;
 }
 
-@media only screen and (min-width: 480px) {
-    .h5p-advanced-blanks #h5p-cloze-container p,
-    .h5p-advanced-blanks #h5p-cloze-container div {
-        text-align: unset;
-    }
+.h5p-advanced-blanks #h5p-cloze-container p:last-child,
+.h5p-advanced-blanks #h5p-cloze-container div:last-child {
+  margin-bottom: 0;
 }
 
 

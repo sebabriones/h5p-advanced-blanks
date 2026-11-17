@@ -24,8 +24,10 @@ export interface AppearanceDefaults {
   feedbackTextColor: string;
   clozeColor: string;
   clozeFontSize: number;
+  clozeLineHeight: number;
   contextText: string;
   contextFontSize: number;
+  contextLineHeight: number;
   correctBackground: string;
   correctBorderColor: string;
   correctText: string;
@@ -64,8 +66,10 @@ const APPEARANCE_DEFAULTS: AppearanceDefaults = {
   feedbackTextColor: '#333333',
   clozeColor: '#333333',
   clozeFontSize: 1,
+  clozeLineHeight: 1.7,
   contextText: '#555555',
   contextFontSize: 1,
+  contextLineHeight: 1.5,
   correctBackground: '#9dd8bb',
   correctBorderColor: '#9dd8bb',
   correctText: '#255c41',
@@ -121,6 +125,12 @@ const CSS_EM_VAR_KEYS: { [key: string]: string } = {
   contextFontSize: '--ab-context-font-size'
 };
 
+/** Unitless multipliers (line-height). */
+const CSS_NUMBER_VAR_KEYS: { [key: string]: string } = {
+  clozeLineHeight: '--ab-cloze-line-height',
+  contextLineHeight: '--ab-context-line-height'
+};
+
 const CSS_PX_VAR_KEYS: { [key: string]: string } = {
   blankBorderWidth: '--ab-blank-border-width',
   scrollbarWidth: '--ab-scrollbar-width'
@@ -144,6 +154,16 @@ function toPx(value: any, fallback: number): string {
     num = Number(fallback);
   }
   return num + 'px';
+}
+
+function toUnitless(value: any, fallback: number): string {
+  let num = (value !== undefined && value !== null && value !== '')
+    ? Number(value)
+    : Number(fallback);
+  if (isNaN(num)) {
+    num = Number(fallback);
+  }
+  return String(num);
 }
 
 function isTruthy(value: any): boolean {
@@ -337,8 +357,10 @@ function readAppearanceFields(appearance: any, overallFeedback?: any): Partial<A
     feedbackTextColor: getFeedbackColors(overallFeedback).feedbackTextColor,
     clozeColor: text.clozeColor,
     clozeFontSize: text.clozeFontSize,
+    clozeLineHeight: text.clozeLineHeight,
     contextText: text.contextColor,
     contextFontSize: text.contextFontSize,
+    contextLineHeight: text.contextLineHeight,
     correctBackground: resolveFill(correct, {
       solidKey: 'background',
       fallbackSolid: APPEARANCE_DEFAULTS.correctBackground
@@ -434,6 +456,9 @@ function getCssVarValue(merged: AppearanceDefaults, key: string): string {
   if (Object.prototype.hasOwnProperty.call(CSS_EM_VAR_KEYS, key)) {
     return toEm((merged as any)[key], (APPEARANCE_DEFAULTS as any)[key]);
   }
+  if (Object.prototype.hasOwnProperty.call(CSS_NUMBER_VAR_KEYS, key)) {
+    return toUnitless((merged as any)[key], (APPEARANCE_DEFAULTS as any)[key]);
+  }
   if (Object.prototype.hasOwnProperty.call(CSS_PX_VAR_KEYS, key)) {
     return toPx((merged as any)[key], (APPEARANCE_DEFAULTS as any)[key]);
   }
@@ -450,6 +475,11 @@ function applyVarsToElement(el: HTMLElement, merged: AppearanceDefaults): void {
   for (key in CSS_EM_VAR_KEYS) {
     if (Object.prototype.hasOwnProperty.call(CSS_EM_VAR_KEYS, key)) {
       el.style.setProperty(CSS_EM_VAR_KEYS[key], getCssVarValue(merged, key));
+    }
+  }
+  for (key in CSS_NUMBER_VAR_KEYS) {
+    if (Object.prototype.hasOwnProperty.call(CSS_NUMBER_VAR_KEYS, key)) {
+      el.style.setProperty(CSS_NUMBER_VAR_KEYS[key], getCssVarValue(merged, key));
     }
   }
   for (key in CSS_PX_VAR_KEYS) {

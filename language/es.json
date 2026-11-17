@@ -576,7 +576,8 @@
               ]
             },
             {
-              "label": "Color del texto del espacio en blanco"
+              "label": "Color del texto del espacio en blanco",
+              "description": "Color del texto escrito o seleccionado dentro de cada espacio. Es distinto del color del párrafo del ejercicio (grupo Texto)."
             },
             {
               "label": "Usar borde"
@@ -642,14 +643,19 @@
         },
         {
           "label": "Texto",
-          "description": "Tamaños y colores del texto del ejercicio y del panel de contexto. Los tamaños son números sin unidad en em (por ejemplo 1, no 1em).",
+          "description": "Tamaño, interlineado y color del párrafo del ejercicio y del panel de contexto. El color del texto dentro de los espacios se configura en Colores del espacio en blanco. Los tamaños son números sin unidad en em (por ejemplo 1, no 1em).",
           "fields": [
             {
               "label": "Tamaño de fuente del ejercicio",
-              "description": "Tamaño relativo al área de juego (em). Se guarda como número (valor predeterminado 1)."
+              "description": "Tamaño del párrafo del ejercicio (los espacios lo heredan). Relativo al área de juego (em). Se guarda como número (valor predeterminado 1)."
             },
             {
-              "label": "Color del texto del ejercicio"
+              "label": "Interlineado del ejercicio",
+              "description": "Altura de línea del párrafo del ejercicio (multiplicador sin unidad)."
+            },
+            {
+              "label": "Color del texto del ejercicio",
+              "description": "Color del párrafo del ejercicio alrededor de los espacios. Para el texto dentro de los espacios, usa Color del texto del espacio en blanco."
             },
             {
               "label": "Color del texto de contexto"
@@ -657,6 +663,10 @@
             {
               "label": "Tamaño de fuente del contexto",
               "description": "Tamaño relativo al área de juego (em). Se guarda como número (valor predeterminado 1)."
+            },
+            {
+              "label": "Interlineado del contexto",
+              "description": "Altura de línea del texto del panel de contexto (multiplicador sin unidad)."
             }
           ]
         },
