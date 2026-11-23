@@ -175,7 +175,6 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
       showFeedbackButtonLabel: 'Show feedback',
       overallFeedback: {
         popupBackgroundColor: '#ffffff',
-        feedbackTextColor: '#333333',
         feedbackBodyFontSize: 1,
         feedbackCloseIconSize: 1.2,
         overallFeedback: []
@@ -186,7 +185,6 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
     if (Array.isArray(config.overallFeedback)) {
       config.overallFeedback = {
         popupBackgroundColor: '#ffffff',
-        feedbackTextColor: '#333333',
         feedbackBodyFontSize: 1,
         feedbackCloseIconSize: 1.2,
         overallFeedback: config.overallFeedback
@@ -195,9 +193,6 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
     else if (config.overallFeedback && typeof config.overallFeedback === 'object') {
       if (!config.overallFeedback.popupBackgroundColor) {
         config.overallFeedback.popupBackgroundColor = '#ffffff';
-      }
-      if (!config.overallFeedback.feedbackTextColor) {
-        config.overallFeedback.feedbackTextColor = '#333333';
       }
       if (config.overallFeedback.feedbackBodyFontSize == null) {
         config.overallFeedback.feedbackBodyFontSize = 1;
@@ -534,7 +529,8 @@ export default class AdvancedBlanks extends (H5P.QuestionCFRD as { new(type?: st
           ratio,
           this.contentId,
           score,
-          maxScore
+          maxScore,
+          { allowHtml: true, omitLead: true }
         )
       : null;
 

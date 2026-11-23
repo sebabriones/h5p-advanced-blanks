@@ -305,13 +305,13 @@ function getFeedbackColors(overallFeedback: any): { feedbackBackground: string; 
   const config = (QC && QC.normalizeOverallFeedbackConfig)
     ? QC.normalizeOverallFeedbackConfig(overallFeedback)
     : {
-        popupBackgroundColor: '#ffffff',
-        feedbackTextColor: '#333333'
+        popupBackgroundColor: '#ffffff'
       };
 
+  // Default text color for unstyled HTML; fragment colors come from the feedback editor.
   return {
     feedbackBackground: config.popupBackgroundColor || '#ffffff',
-    feedbackTextColor: config.feedbackTextColor || '#333333'
+    feedbackTextColor: '#333333'
   };
 }
 

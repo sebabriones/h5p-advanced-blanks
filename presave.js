@@ -30,7 +30,6 @@ function migrateLegacyParameters(p) {
   if (Array.isArray(of)) {
     p.overallFeedback = {
       popupBackgroundColor: '#ffffff',
-      feedbackTextColor: '#333333',
       feedbackBodyFontSize: 1,
       feedbackCloseIconSize: 1.2,
       overallFeedback: of
@@ -39,7 +38,6 @@ function migrateLegacyParameters(p) {
   }
   else if (of && typeof of === 'object') {
     if (!of.popupBackgroundColor) { of.popupBackgroundColor = '#ffffff'; }
-    if (!of.feedbackTextColor) { of.feedbackTextColor = '#333333'; }
     if (of.feedbackBodyFontSize == null) { of.feedbackBodyFontSize = 1; }
     if (of.feedbackCloseIconSize == null) { of.feedbackCloseIconSize = 1.2; }
   }
@@ -59,7 +57,6 @@ function migrateLegacyParameters(p) {
     }
     p.overallFeedback = {
       popupBackgroundColor: of.popupBackgroundColor || '#ffffff',
-      feedbackTextColor: of.feedbackTextColor || '#333333',
       feedbackBodyFontSize: of.feedbackBodyFontSize != null ? of.feedbackBodyFontSize : 1,
       feedbackCloseIconSize: of.feedbackCloseIconSize != null ? of.feedbackCloseIconSize : 1.2,
       overallFeedback: ranges

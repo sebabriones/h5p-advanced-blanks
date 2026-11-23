@@ -80,7 +80,6 @@ H5PUpgrades['H5P.AdvancedBlanksCFRD'] = (function () {
           if (Array.isArray(overallFeedback)) {
             parameters.overallFeedback = {
               popupBackgroundColor: '#ffffff',
-              feedbackTextColor: '#333333',
               feedbackBodyFontSize: 1,
               feedbackCloseIconSize: 1.2,
               overallFeedback: overallFeedback
@@ -89,9 +88,6 @@ H5PUpgrades['H5P.AdvancedBlanksCFRD'] = (function () {
           else if (overallFeedback && typeof overallFeedback === 'object') {
             if (!overallFeedback.popupBackgroundColor) {
               overallFeedback.popupBackgroundColor = '#ffffff';
-            }
-            if (!overallFeedback.feedbackTextColor) {
-              overallFeedback.feedbackTextColor = '#333333';
             }
             if (overallFeedback.feedbackBodyFontSize == null) {
               overallFeedback.feedbackBodyFontSize = 1;
@@ -134,7 +130,6 @@ H5PUpgrades['H5P.AdvancedBlanksCFRD'] = (function () {
 
           parameters.overallFeedback = {
             popupBackgroundColor: overallFeedback.popupBackgroundColor || '#ffffff',
-            feedbackTextColor: overallFeedback.feedbackTextColor || '#333333',
             feedbackBodyFontSize: overallFeedback.feedbackBodyFontSize != null
               ? overallFeedback.feedbackBodyFontSize
               : 1,
